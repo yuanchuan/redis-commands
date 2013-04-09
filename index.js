@@ -10,8 +10,10 @@ names
   .filter(exists)
   .forEach(function(path) {
     var mod = require(path);
-    for (var method in mod.prototype) {
-      Redis.prototype[method] = mod.prototype[method];
+    for (var m in mod.prototype) {
+      Redis.prototype[m] 
+        = Redis.prototype[m.toUpperCase()] 
+        = mod.prototype[m];
     }
   });
 
