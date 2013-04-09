@@ -1,4 +1,7 @@
 
+var minimatch = require('minimatch');
+
+
 /**
  *  Expose.
  */
@@ -28,9 +31,12 @@ R.del = function(/* key1, key2... */) {
 }                
 
 
-R.keys = function() {
-
+R.keys = function(pattern) {
+  return Object.keys(this.__store).filter(function(key) {
+    return minimatch(key, pattern);
+  });
 }
+
 
 R.expire = function(key, time) {
 
@@ -89,5 +95,4 @@ R.sort = function() {}
 R.move = function() {}
 R.migrate = function() {}
 R.object = function() {}
-R.sort = function() {}
 
