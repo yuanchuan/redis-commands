@@ -3,15 +3,7 @@ var minimatch = require('minimatch')
   , timers = require('./lib/timers');
 
 
-/**
- *  Expose.
- */
 var Redis = module.exports = require('./lib/Redis');
-
-
-/**
- * Alias for Redis.prototype.
- */
 var R = Redis.prototype;
 
 
@@ -37,6 +29,12 @@ R.keys = function(pattern) {
   return Object.keys(this.__store).filter(function(key) {
     return minimatch(key, pattern || '');
   });
+}
+
+ 
+R.randomkey = function(key) {  
+  var keys = Object.keys(this.__store);
+  return keys[Math.floor(Math.random() * keys.length)];
 }
 
 
@@ -77,22 +75,16 @@ R.pttl = function(key) {
 
 
 R.ttl = function(key) {
-  var sec = this.pttl(key);  
-  var method = sec > 1 ? 'floor' : 'ceil';
-  return sec > 0 ? Math[method](sec / 1e3) : sec; 
+  var msec = this.pttl(key);  
+  var method = msec > 1000 ? 'floor' : 'ceil';
+  return msec > 0 ? Math[method](msec / 1e3) : msec; 
 }
 
 
-R.persist = function(key, time) {
+R.persist = function(key) {
   if (!this.exists(key) || !timers.exists(key)) return 0;              
   timers.del(key);
   return 1;
-}
-
-
-R.randomkey = function(key, time) {  
-  var keys = Object.keys(this.__store);
-  return keys[Math.floor(Math.random() * keys.length)];
 }
 
 
@@ -121,7 +113,6 @@ R.renamenx = function(key1, key2) {
 R.type = function(key) {
   return this.__type || 'none';
 }
-
 
 
 //These are really hard to implement :D
