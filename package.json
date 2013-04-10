@@ -1,0 +1,28 @@
+{
+  "name": "redis-interface",
+  "version": "0.0.1",
+  "description": "redis interface implemented in javascript (learning purpose only)",
+  "main": "index.js",
+  "dependencies": {
+    "minimatch": "~0.2.11"
+  },
+  "devDependencies": {
+    "mocha": "~1.9.0",
+    "should": "*"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuanchuan/redis-interface"
+  },
+  "keywords": [
+    "redis",
+    "interface",
+    "api"
+  ],
+  "author": "yuanchuan",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
