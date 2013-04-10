@@ -100,6 +100,15 @@ describe('Keys.js', function() {
         done();
       }, 0);
     });         
+
+    it('should reset timers', function(done) {
+      R.pexpire('key-a', 200);
+      setTimeout(function() {
+        R.pexpire('key-a', 200);
+        assert.ok(R.pttl('key-a') > 150);
+        done();
+      }, 100);
+    });
   });
 
   

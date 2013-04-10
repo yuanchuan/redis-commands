@@ -8,7 +8,15 @@ expireTimers.exists = function(key) {
 };  
 
 
+expireTimers.clear = function(key) {
+  if (expireTimers.exists(key)) {
+    clearTimeout(memo[key].timer);
+  } 
+};  
+
+   
 expireTimers.set = function(key, timeout, action) {
+  expireTimers.clear();
   memo[key] = {
     timeout: timeout,
     stamp: Date.now(),
@@ -28,9 +36,7 @@ expireTimers.get = function(key) {
 
 
 expireTimers.del = function(key) {
-  if (expireTimers.exists(key)) {
-    clearTimeout(memo[key].timer);
-  }
+  expireTimers.clear();
   delete memo[key];
 }
 
