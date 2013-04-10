@@ -102,7 +102,8 @@ R.rename = function(key1, key2) {
 
 R.renamenx = function(key1, key2) {
   if (this.exists(key2)) return 0;
-  return this.rename(key1, key2);
+  this.rename(key1, key2);
+  return 1;
 }
 
 

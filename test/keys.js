@@ -227,6 +227,27 @@ describe('Keys.js', function() {
     });
 
   });
- 
+
+
+  describe('#renamenx()', function() {
+
+    it("should return 1 if key was renamed to newkey", function() {
+      assert.equal(1, R.renamenx('key-a', 'key-new'));
+    });
+
+    it("should return 0 if the newkey if newkey already exists", function() {
+      assert.equal(0, R.renamenx('key-a', 'key-b'));
+    });     
+
+    it('should expose error as in rename', function() {
+      try {
+        R.renamenx('key-a', 'key-a');
+      } catch(e) {
+        assert.ok(true);
+      }
+    }); 
+    
+  });
+
 })
 
