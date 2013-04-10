@@ -1,7 +1,7 @@
 {
-  "name": "redis-interface",
+  "name": "redis-commands",
   "version": "0.0.1",
-  "description": "redis interface implemented in javascript (learning purpose only)",
+  "description": "Redis commands implemented in javascript (learning purpose only)",
   "main": "index.js",
   "dependencies": {
     "minimatch": "~0.2.11"
@@ -15,11 +15,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yuanchuan/redis-interface"
+    "url": "https://github.com/yuanchuan/redis-commands"
   },
   "keywords": [
     "redis",
-    "interface",
+    "commands",
     "api"
   ],
   "author": "yuanchuan",

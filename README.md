@@ -1,6 +1,6 @@
-# redis-interface
+# redis-commands
 
-Redis interface implemented in JavaScript.
+Redis commands implemented in JavaScript.
 
 Still have a lot to go.
 
