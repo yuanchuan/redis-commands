@@ -11,9 +11,7 @@ names
   .forEach(function(path) {
     var mod = require(path);
     for (var m in mod.prototype) {
-      Redis.prototype[m] 
-        = Redis.prototype[m.toUpperCase()] 
-        = mod.prototype[m];
+      Redis.prototype[m] = mod.prototype[m];
     }
   });
 
