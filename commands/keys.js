@@ -13,8 +13,9 @@ R.del = function(/* key1, key2... */) {
   var count = 0;
   [].forEach.call(arguments, (function(key) {
     if (this.exists(key)) {
-      this.__timers.del(key);
       this.__store.del(key);
+      this.__timers.del(key);
+      this.__types.del(key);
       count += 1;
     }
   }).bind(this));
