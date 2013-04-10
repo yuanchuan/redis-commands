@@ -1,36 +1,36 @@
 
 var expireTimers = module.exports = {};
+var memo = {};
 
-var memo = {
-  timeout: Object.create(null),
-  timers: Object.create(null),
-  stamps: Object.create(null)
-}
+
+expireTimers.exists = function(key) {
+  return {}.hasOwnProperty.call(memo, key);
+};  
 
 
 expireTimers.set = function(key, timeout, action) {
-  memo.timeout[key] = timeout;
-  memo.stamps[key] = Date.now();
-  memo.timers[key] = setTimeout(function() {
-    action();
-    expireTimers.del(key);
-  }, timeout);
+  memo[key] = {
+    timeout: timeout,
+    stamp: Date.now(),
+    timer: setTimeout(function() {
+      action();
+      expireTimers.del(key);
+    }, timeout)        
+  };
 }
 
 
 expireTimers.get = function(key) {
-  return memo.timeout[key] - (Date.now() - memo.stamps[key]);
+  if (expireTimers.exists(key)) {
+    return memo[key].timeout - (Date.now() - memo[key].stamp);
+  }
 }
 
 
 expireTimers.del = function(key) {
-  clearTimeout(memo.timers[key]); 
-  delete memo.timeout[key];
-  delete memo.timers[key];
-  delete memo.stamps[key];
+  if (expireTimers.exists(key)) {
+    clearTimeout(memo[key].timer);
+  }
+  delete memo[key];
 }
 
-
-expireTimers.exists = function(key) {
-  return {}.hasOwnProperty.call(memo.timers, key);
-};
