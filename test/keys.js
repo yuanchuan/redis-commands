@@ -109,6 +109,16 @@ describe('Keys.js', function() {
         done();
       }, 100);
     });
+
+    it('should expose error with bad arguments', function() {
+      var flag = false;
+      try {
+        R.pexpire('key-a','2dfsdf');
+      } catch(e) {
+        assert.ok(flag = true);  
+      }
+      assert.ok(flag);
+    });
   });
 
   
@@ -204,19 +214,23 @@ describe('Keys.js', function() {
     });
 
     it('should expose error when the first key does not exist', function() {
+      var flag = false;
       try {
         R.rename('key-unkown', 'key-b');
       } catch(e) {
-        assert.ok(true);
+        assert.ok(flag = true);
       }
+      assert.ok(flag);
     });  
 
     it('should expose error when the two keys are the same', function() {
+      var flag = false;
       try {
         R.rename('key-a', 'key-a');
       } catch(e) {
-        assert.ok(true);
+        assert.ok(flag = true);
       }
+      assert.ok(flag);
     });      
 
     it('should transfer the timer to the new key if set', function() {
@@ -235,16 +249,18 @@ describe('Keys.js', function() {
       assert.equal(1, R.renamenx('key-a', 'key-new'));
     });
 
-    it("should return 0 if the newkey if newkey already exists", function() {
+    it("should return 0 if newkey already exists", function() {
       assert.equal(0, R.renamenx('key-a', 'key-b'));
     });     
 
     it('should expose error as in rename', function() {
+      var flag = false;
       try {
         R.renamenx('key-a', 'key-a');
       } catch(e) {
-        assert.ok(true);
+        assert.ok(flag = true);
       }
+      assert.ok(flag);
     }); 
     
   });

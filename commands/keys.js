@@ -30,7 +30,7 @@ R.keys = function(pattern) {
 }
 
  
-R.randomkey = function(key) {  
+R.randomkey = function() {  
   var keys = this.__store.keys();
   return keys[Math.floor(Math.random() * keys.length)];
 }
@@ -39,6 +39,7 @@ R.randomkey = function(key) {
 R.pexpire = function(key, msec) {
   if (!this.exists(key)) return 0;
   if (msec < 0)  msec = 0;
+  if (isNaN(+msec)) throw Error('Not an integer or out of range');
   this.__timers.set(key, msec, (function() {
     this.del(key);
   }).bind(this));
@@ -102,6 +103,9 @@ R.rename = function(key1, key2) {
 
 
 R.renamenx = function(key1, key2) {
+  if (key1 === key2) {
+    throw Error("Source and destination objects are the same")
+  } 
   if (this.exists(key2)) return 0;
   this.rename(key1, key2);
   return 1;
