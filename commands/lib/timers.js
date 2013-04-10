@@ -1,42 +1,46 @@
 
-var expireTimers = module.exports = {};
-var memo = {};
+module.exports = new Timers();
 
 
-expireTimers.exists = function(key) {
-  return {}.hasOwnProperty.call(memo, key);
-};  
+function Timers() {
+  this.memo = Object.create(null);
+}
 
 
-expireTimers.clear = function(key) {
-  if (expireTimers.exists(key)) {
-    clearTimeout(memo[key].timer);
-  } 
-};  
+Timers.prototype.exists = function(key) {
+  return {}.hasOwnProperty.call(this.memo, key);
+}  
+
+
+Timers.prototype.get = function(key) {
+  if (this.exists(key)) {
+    return this.memo[key].timeout - (Date.now() - this.memo[key].stamp);
+  }
+}
 
    
-expireTimers.set = function(key, timeout, action) {
-  expireTimers.clear();
-  memo[key] = {
+Timers.prototype.set = function(key, timeout, action) {
+  this.clear();
+  this.memo[key] = {
     timeout: timeout,
     stamp: Date.now(),
-    timer: setTimeout(function() {
+    timer: setTimeout((function() {
       action();
-      expireTimers.del(key);
-    }, timeout)        
+      this.del(key);
+    }).bind(this), timeout)        
   };
 }
 
 
-expireTimers.get = function(key) {
-  if (expireTimers.exists(key)) {
-    return memo[key].timeout - (Date.now() - memo[key].stamp);
-  }
-}
+Timers.prototype.clear = function(key) {
+  if (this.exists(key)) {
+    clearTimeout(this.memo[key].timer);
+  } 
+};  
 
-
-expireTimers.del = function(key) {
-  expireTimers.clear();
-  delete memo[key];
+ 
+Timers.prototype.del = function(key) {
+  this.clear();
+  delete this.memo[key];
 }
 

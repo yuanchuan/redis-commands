@@ -9,7 +9,7 @@ describe('Keys.js', function() {
 
   beforeEach(function() {
     'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(key) {
-      R.__store['key-' + key] = key;
+      R.__store.set('key-' + key, key);
     });
   });
 
@@ -65,12 +65,12 @@ describe('Keys.js', function() {
 
     it('should return all keys', function() {
       var key = R.keys('key-*');  
-      Object.keys(R.__store).should.have.lengthOf(26);
+      R.__store.keys().should.have.lengthOf(26);
     });
 
     it('should return all keys', function() {
       var key = R.keys('k?y');  
-      Object.keys(R.__store).should.have.lengthOf(26);
+      R.__store.keys().should.have.lengthOf(26);
     });      
 
   });
@@ -79,13 +79,13 @@ describe('Keys.js', function() {
   describe('#randomkey()', function() {
     it('should return a key', function() {
       var key = R.randomkey();
-      Object.keys(R.__store).should.include(key);
+      R.__store.keys().should.include(key);
     });
   });
 
  
   describe('#pexpire()', function() {
-    it('should expire a key with millionsecond', function(done) {
+    it('should expire a key with millisecond', function(done) {
       R.pexpire('key-a', 200);    
       setTimeout(function() {
         assert.equal(0, R.exists('key-a'));
@@ -93,7 +93,7 @@ describe('Keys.js', function() {
       }, 200);
     });
 
-    it('should convert negative millionsecond to 0, expire immediately', function(done) {
+    it('should convert negative millisecond to 0, expire immediately', function(done) {
       R.pexpire('key-a', -200);    
       setTimeout(function() {
         assert.equal(0, R.exists('key-a'));
@@ -124,7 +124,7 @@ describe('Keys.js', function() {
 
 
   describe('#pexpireat()', function() {
-    it('should expire a key with a unix time in millionsecond', function(done) {
+    it('should expire a key with a unix time in millisecond', function(done) {
       R.pexpireat('key-a', Date.now() + 200);
       setTimeout(function() {
         assert.equal(0, R.exists('key-a'));
@@ -145,7 +145,7 @@ describe('Keys.js', function() {
 
 
   describe('#pttl()', function() {
-    it('should return the time left of an expiring key in millionsecond', function(done) {
+    it('should return the time left of an expiring key in millisecond', function(done) {
       R.pexpire('key-a', 200);    
       setTimeout(function() {
         assert.ok(Math.abs(100 - R.pttl('key-a')) < 2);
@@ -200,7 +200,7 @@ describe('Keys.js', function() {
     it('should rename two existed keys', function() {
       R.rename('key-a', 'key-b');
       assert.equal(0, R.exists('key-a'));
-      assert.equal('a',  R.__store['key-b']);
+      assert.equal('a',  R.__store.get('key-b'));
     });
 
     it('should expose error when the first key does not exist', function() {
