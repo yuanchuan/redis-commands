@@ -104,9 +104,14 @@ R.getrange = function(key, from, to) {
 }
 
 
-R.append = function() {
-
-
+R.append = function(key, str) {
+  // require 2 args
+  // require string type
+  if (!this.__store.exists(key)) {
+    this.set(key, '');
+  }
+  this.set(key, this.get(key) + str);
+  return this.get(key);
 }
 
 

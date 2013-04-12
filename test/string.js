@@ -171,6 +171,16 @@ describe('strings.js', function() {
       assert.equal('', R.getrange('key-a', 100, -2));
     });
   });
+
+  describe('#append()', function() {
+    it('should handle non-existing key', function() {
+      assert.equal('abc', R.append('key-empty', 'abc'));  
+    });
+    it('should append new string to a key', function() {
+      R.set('key-a', 'abc');
+      assert.equal('abcdef', R.append('key-a', 'def'));  
+    }); 
+  });
   
 })
 
