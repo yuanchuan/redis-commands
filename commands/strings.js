@@ -70,7 +70,7 @@ R.decrby = function(key, amount) {
 
  
 R.decr = function(key) {
-  return this.decrby(key, 1);
+  return this.incrby(key, -1);
 }
 
  
