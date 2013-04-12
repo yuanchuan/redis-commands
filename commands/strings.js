@@ -74,7 +74,6 @@ R.decr = function(key) {
 }
 
  
-// known but 2.0 === 2
 R.incrbyfloat = function(key, amount) {
   // require 2 args
   // require string type
@@ -91,16 +90,12 @@ R.incrbyfloat = function(key, amount) {
 R.getrange = function(key, from, to) {
   // requrie 3 arg
   // require string type
-  var string = this.get(key);
-  var length = string.length;
-
-  if (from < 0) {
-    from = ((from < -length) ? -length : from) + length;
-  }
-  if (to < 0) {
-    to = ((to < -length) ? -length : to) + length
-  }
-  return string.substr(from, to + 1);
+  var string = this.get(key)
+    , len = string.length;
+  return string.substr(
+    normalizeOffset(from, len), 
+    normalizeOffset(to, len) + 1
+  );
 }
 
 
@@ -114,6 +109,16 @@ R.append = function(key, str) {
   return this.get(key);
 }
 
+
+function normalizeOffset(offset, length) {
+  // -7 -6 -5 -4 -3 -2 -1
+  // 0  1  2  3  4  5  6
+  // a  b  c  d  e  f  g
+  if (offset < 0) {
+    offset = ((offset < -length) ? -length : offset) + length;
+  }
+  return offset;
+}
 
 
 /*
