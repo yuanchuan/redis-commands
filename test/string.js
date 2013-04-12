@@ -137,6 +137,26 @@ describe('strings.js', function() {
       assert.equal(1, R.decr('key-b'));  
     }); 
   });
+ 
+  describe('#incrbyfloat', function() {
+    it('should return 4', function() {
+      R.set('key-a', 2);
+      assert.equal(4, R.incrbyfloat('key-a', 2)); 
+    });
+    it('should return 4.2', function() {
+      R.set('key-a', 2);
+      assert.equal(4.2, R.incrbyfloat('key-a', 2.2)); 
+    }); 
+    it('should recognize hex number', function() {
+      R.set('key-a', 2);
+      assert.equal(3, R.incrbyfloat('key-a', 0x01));
+    });
+    it('should recognize scientific notation', function() {
+      R.set('key-a', 2);
+      assert.equal(102, R.incrbyfloat('key-a', 1e2));
+    }); 
+
+  });
 
 })
 

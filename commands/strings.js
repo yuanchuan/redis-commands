@@ -74,13 +74,17 @@ R.decr = function(key) {
 }
 
  
-// 2.0 === 2
+// known but 2.0 === 2
 R.incrbyfloat = function(key, amount) {
   // require 2 args
   // require string type
   // require key's value to be a number
-  // require amount to be an number     
-
+  // require amount to be a number     
+  if (!this.__store.exists(key)) {
+    this.set(key, "0");
+  }
+  this.set(key, (+this.get(key)) + (+amount));
+  return this.get(key);
 }
 
 
