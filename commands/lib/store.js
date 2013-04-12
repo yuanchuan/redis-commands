@@ -30,3 +30,7 @@ Store.prototype.keys = function() {
   return Object.keys(this.memo);
 }
 
+Store.prototype.clear = function() {
+  this.memo = Object.create(null);
+}
+
