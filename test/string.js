@@ -159,7 +159,7 @@ describe('strings.js', function() {
   });
 
   describe('#getrange()', function() {
-    it.only('should return return specified range of string', function() {
+    it('should return specified range of string', function() {
       R.set('key-a', 'abcdefg');
       assert.equal('abc', R.getrange('key-a', 0, 2));
       assert.equal('abc', R.getrange('key-a', -7, -5));
@@ -167,8 +167,10 @@ describe('strings.js', function() {
       assert.equal('abc', R.getrange('key-a', -10, -5));
       assert.equal('abc', R.getrange('key-a', 0, -5));
       assert.equal('fg', R.getrange('key-a', -2, 100));
+      assert.equal('', R.getrange('key-a', 20, 100));
+      assert.equal('', R.getrange('key-a', 100, -2));
     });
   });
-
+  
 })
 

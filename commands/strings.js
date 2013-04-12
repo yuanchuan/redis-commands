@@ -100,7 +100,7 @@ R.getrange = function(key, from, to) {
   if (to < 0) {
     to = ((to < -length) ? -length : to) + length
   }
-  return string.substring(from, to + 1);
+  return string.substr(from, to + 1);
 }
 
 
