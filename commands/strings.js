@@ -36,7 +36,7 @@ R.strlen = function(key) {
   // require 1 arg
   // require string sype
   if (this.__store.exists(key)) {
-    return this.__store.get(key).length;
+    return this.get(key).length;
   } else {
     return 0;
   }
