@@ -8,6 +8,7 @@ describe('strings.js', function() {
   var R = new Redis();
 
   beforeEach(function() {
+    R.__store.clear();
     'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(key) {
       R.set('key-' + key, key);
     });
@@ -29,8 +30,7 @@ describe('strings.js', function() {
     it('should set a plain string', function() {
       R.set('key-a', 'aaa');
       assert.equal('aaa', R.get('key-a'));
-    });
-    
+    }); 
     it.skip('should expose error on settting an array', function() {
       var flag = false;
       try {
@@ -95,44 +95,47 @@ describe('strings.js', function() {
   describe('#incrby()', function() {
     it('should return 4', function() {
       R.set('key-a', '1');
-      assert(4, R.incrby('key-a', 3));
+      assert.equal(4, R.incrby('key-a', 3));
     });
     it('should return -2', function() {
       R.set('key-a', '1');
-      assert(-2, R.incrby('key-a', -3));
+      assert.equal(-2, R.incrby('key-a', -3));
     }); 
     it('should return the amount to an non-existing key', function() {
-      assert(2, R.incrby('key-empty', 2));  
+      assert.equal(2, R.incrby('key-empty', 2));  
     });
   });
 
   describe('#incr', function() {
     it('should return 1 to an non-existing key', function() {
-      assert(1, R.incr('key-empty'));  
+      assert.equal(1, R.incr('key-empty'));  
     });
     it('should return 2', function() {
       R.set('key-b', 1);
-      assert(2, R.incr('key-b'));  
+      assert.equal(2, R.incr('key-b'));  
     }); 
   });
 
   describe('#decrby', function() {
     it('should return 2', function() {
       R.set('key-a', 4);
-      assert(2, R.decrby('key-a', 2));
+      assert.equal(2, R.decrby('key-a', 2));
     });
+    it('should recognize hex number', function() {
+      R.set('key-a', 2);
+      assert.equal(3, R.incrby('key-a', 0x01));
+    });    
   });
 
   describe('#decr', function() {
     it('should return -1 to an non-existing key', function() {
-      assert(-1, R.decr('key-empty'));  
+      assert.equal(-1, R.decr('key-empty'));  
     });
 
     it('should return 1', function() {
       R.set('key-b', 2);
-      assert(2, R.decr('key-b'));  
+      assert.equal(1, R.decr('key-b'));  
     }); 
-      
   });
 
 })
