@@ -88,9 +88,19 @@ R.incrbyfloat = function(key, amount) {
 }
 
 
-R.getrange = function() {
+R.getrange = function(key, from, to) {
+  // requrie 3 arg
+  // require string type
+  var string = this.get(key);
+  var length = string.length;
 
-
+  if (from < 0) {
+    from = ((from < -length) ? -length : from) + length;
+  }
+  if (to < 0) {
+    to = ((to < -length) ? -length : to) + length
+  }
+  return string.substring(from, to + 1);
 }
 
 
@@ -108,7 +118,7 @@ if (this.__store.exists(key) && this.__types.get(key) !== 'string') {
 }
 
 if (arguments.length < 2) {
-    throw Error('Wrong number of arguments');
+  throw Error('Wrong number of arguments');
 }
 
 if (typeof value !== 'string') {
