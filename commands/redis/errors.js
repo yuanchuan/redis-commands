@@ -69,6 +69,12 @@ module.exports = {
     if (isNaN(+arguments[1])) {
       throw Error('Value is not a valid float');
     }
+  },
+  
+  'odd_args': function() {
+    if (arguments.length < 1 || arguments.length % 2 !== 0) {
+      throw Error('Wrong number of arguments');
+    }
   }
 
 }

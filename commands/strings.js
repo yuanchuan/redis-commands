@@ -20,7 +20,8 @@ R.setnx = function(key, value) {
   if (this.__store.exists(key)) {
     return 0;
   }
-  return set(key, value);
+  set(key, value);
+  return 1;
 }
 
 
@@ -60,6 +61,39 @@ R.getset = function(key, value) {
   var old = this.get(key);
   this.set(key, value);
   return old;
+}
+
+
+R.mget = function(/* key1, key2... */) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  );  
+  return [].map.call(arguments, (function(key) {
+    return this.get(key);
+  }).bind(this));
+}
+
+
+R.mset = function(key, value/* , key, value... */) {
+  this.__check(arguments).whether(
+    'odd_args'
+  ); 
+  for (var i = 0; i < arguments.length; i += 2 ) {
+    this.set(arguments[i], arguments[i + 1]);
+  }
+}
+
+
+R.msetnx = function(key, value/* , key, value... */) {
+  this.__check(arguments).whether(
+    'odd_args'
+  ); 
+  for (var i = 0, status = 1; i < arguments.length; i +=2 ) {
+    if ( !status ) return 0;
+    console.log(status);
+    status = this.setnx(arguments[i], arguments[i + 1]);
+  }
+  return 1;
 }
 
 

@@ -94,7 +94,6 @@ describe('strings.js', function() {
 
   });
 
-
   describe('#getset()', function() {
     it('should return old value of the key', function() {
       R.set('key-a', 'oldval');
@@ -106,6 +105,43 @@ describe('strings.js', function() {
       R.getset('key-b', 'newval');
       assert.equal('newval', R.get('key-b'));
     });  
+  });
+
+  describe('#mget()', function() {
+    it('should return multiple value as an array', function() {
+      assert.equal(
+        JSON.stringify(R.mget('key-a', 'key-b', 'key-c')),
+        JSON.stringify(['a','b','c'])
+      );
+      assert.equal(
+        JSON.stringify(R.mget('key-a', 'key-b', 'key-empty')),
+        JSON.stringify(['a','b',null])
+      );
+    });
+  });
+
+  describe('#mset', function() {
+    it('should handle odd number of arguments', function() {
+      var flag = false;
+      try {
+        R.mset('key-a', 'key-a', 'key-b');
+      } catch (e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });
+
+    it('should set multiple key at once', function() {
+      R.mset('key-a', 'aa', 'key-b', 'bb');
+      assert.equal('aa', R.get('key-a'));
+      assert.equal('bb', R.get('key-b'));
+    });
+  });
+
+  describe('#msetnx', function() {
+    it('should return 0 on setting value to an existing key', function() {
+      assert.equal(0, R.msetnx('key-a', 'a', 'key-empty', 'empty'));
+    });
   });
 
   describe('#strlen()', function() {
