@@ -8,7 +8,9 @@ describe('strings.js', function() {
   var R = new Redis();
 
   beforeEach(function() {
-    R.__store.clear();
+    R.__store.delAll();
+    R.__timers.delAll();
+    R.__types.delAll();
     'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(key) {
       R.set('key-' + key, key);
     });
@@ -48,10 +50,10 @@ describe('strings.js', function() {
 
   describe('#setex()', function() {
     it('should set a key and expire a key with second', function(done) {
-      R.setex('key-z', 1, 'ab');
-      assert.equal('ab', R.get('key-z'));
+      R.setex('key-mykey', 1, 'ab');
+      assert.equal('ab', R.get('key-mykey'));
       setTimeout(function() {
-        assert.ok(!R.exists('key-z'));
+        assert.equal(0, R.exists('key-mykey'));
         done();
       }, 1000);
     });
@@ -62,7 +64,7 @@ describe('strings.js', function() {
       R.psetex('key-a', 200, 'ab');
       assert.equal('ab', R.get('key-a'));
       setTimeout(function() {
-        assert.ok(!R.exists('key-a'));
+        assert.equal(0, R.exists('key-a'));
         done();
       }, 200); 
 

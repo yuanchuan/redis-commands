@@ -1,22 +1,16 @@
 
-module.exports = new Store();
-
-
-function Store() {
+var Store = module.exports = function Store() {
   this.memo = Object.create(null);
 }
-
 
 Store.prototype.exists = function(key) {
   return {}.hasOwnProperty.call(this.memo, key);
 }  
 
- 
 Store.prototype.get = function(key) {
   return this.memo[key];
 }
  
-  
 Store.prototype.set = function(key, name) {
   if (typeof name === 'number') {
     name = '' + name;
@@ -26,7 +20,6 @@ Store.prototype.set = function(key, name) {
   this.memo[key] = name;
 }
 
-
 Store.prototype.del = function(key) {
   delete this.memo[key];
 }
@@ -35,7 +28,7 @@ Store.prototype.keys = function() {
   return Object.keys(this.memo);
 }
 
-Store.prototype.clear = function() {
+Store.prototype.delAll = function() {
   this.memo = Object.create(null);
 }
 

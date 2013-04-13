@@ -3,11 +3,15 @@ var should = require('should');
 var Redis = require('../commands/keys');
 
 
+
 describe('Keys.js', function() {
 
   var R = new Redis();
 
   beforeEach(function() {
+    R.__store.delAll();
+    R.__timers.delAll();
+    R.__types.delAll();
     'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(key) {
       R.__store.set('key-' + key, key);
     });
@@ -86,11 +90,11 @@ describe('Keys.js', function() {
  
   describe('#pexpire()', function() {
     it('should expire a key with millisecond', function(done) {
-      R.pexpire('key-a', 200);    
+      R.pexpire('key-a', 100);    
       setTimeout(function() {
         assert.equal(0, R.exists('key-a'));
         done();
-      }, 200);
+      }, 120);
     });
 
     it('should convert negative millisecond to 0, expire immediately', function(done) {
@@ -220,8 +224,8 @@ describe('Keys.js', function() {
       R.persist('key-a');
       setTimeout(function() {
         assert.equal(1, R.exists('key-a'));  
-      }, 120);
-      done();
+        done();
+      }, 200);
     });
   });
 
