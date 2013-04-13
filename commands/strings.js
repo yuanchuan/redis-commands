@@ -163,6 +163,21 @@ R.getrange = function(key, from, to) {
 }
 
 
+R.setrange = function(key, offset, replacer) {
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd', 'key_type_not_string', 
+    '2nd_not_integer', '2nd_negative'
+  );
+  var origin = this.get(key);
+  var len = origin.length - 1;
+  var gap = len < offset ? new Array(offset - len).join('\x00') : '';
+  var rest = origin.substr(offset + replacer.length);
+  var result = origin.substr(0, offset).concat(gap, replacer, rest);
+  this.__store.set(key, result);
+  return result.length;
+}
+
+
 R.append = function(key, str) {
   this.__check(arguments).whether(
     'missing_1st_and_2nd', 'key_type_not_string'
@@ -183,5 +198,13 @@ function normalizeOffset(offset, length) {
     offset = ((offset < -length) ? -length : offset) + length;
   }
   return offset;
+}
+
+
+R.setbit =
+R.getbit =
+R.bittop =
+R.bitcount = function() {
+  throw Error('Function not implemented');
 }
 

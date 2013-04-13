@@ -75,6 +75,12 @@ module.exports = {
     if (arguments.length < 1 || arguments.length % 2 !== 0) {
       throw Error('Wrong number of arguments');
     }
+  },
+
+  '2nd_negative': function() {
+    if (arguments[1] < 0) {
+      throw Error('Value out of range');
+    }
   }
 
 }

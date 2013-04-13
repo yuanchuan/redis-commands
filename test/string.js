@@ -276,6 +276,46 @@ describe('strings.js', function() {
     });
   });
 
+
+  describe('#setrange()', function() {
+
+    it('should expose error with negative offset', function() {
+      var flag = false;
+      try {
+        R.setrange('key-a', -2, 'substring');
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });
+
+    it('should set range properly', function() {
+
+      R.set('key-a', 'abcdefg');
+      R.setrange('key-a', 2, 'xyz')
+      assert.equal('abxyzfg', R.get('key-a'));
+
+      R.set('key-a', 'abcdefg');
+      R.setrange('key-a', 0, 'xyz')
+      assert.equal('xyzdefg', R.get('key-a'));
+ 
+      R.set('key-a', 'abcdefg');
+      R.setrange('key-a', 7, 'xyz')
+      assert.equal('abcdefgxyz', R.get('key-a'));
+       
+      R.set('key-a', 'abcdefg');
+      R.setrange('key-a', 8, 'xyz');
+      assert.equal('abcdefg\u0000xyz', R.get('key-a'));
+
+      R.set('key-a', 'abcdefg');
+      R.setrange('key-a', 9, 'xyz');
+      assert.equal('abcdefg\u0000\u0000xyz', R.get('key-a')); 
+
+      R.set('key-a', 'abcdefg');
+      assert.equal(103, R.setrange('key-a', 100, 'xyz'));    
+    });
+  });
+
   describe('#append()', function() {
     it('should handle non-existing key', function() {
       assert.equal('abc', R.append('key-empty', 'abc'));  
