@@ -1,6 +1,6 @@
 
 var exists = require('fs').existsSync;
-var Redis = module.exports = require('./commands/lib/Redis');
+var Redis = module.exports = require('./commands/redis');
 var names = ['keys', 'strings', 'hashes', 'lists', 'sets', 'sorted-sets']; 
 
 names

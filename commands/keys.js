@@ -1,6 +1,6 @@
 
 var minimatch = require('minimatch')
-var Redis = module.exports = require('./lib/Redis');
+var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
 
