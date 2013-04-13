@@ -100,6 +100,47 @@ describe('strings.js', function() {
     it('should return the amount to an non-existing key', function() {
       assert.equal(2, R.incrby('key-empty', 2));  
     });
+    it('should expose error with bad arguments', function() {
+      var flag = false
+      try {
+        R.incryby();
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });
+    it('should expose error the type of key value not integer', function() {
+      var flag = false
+      try {
+        R.set('key-a', 'hello');
+        R.incryby('key-a', 1);
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });  
+    it('should expose error the amount value not integer', function() {
+      var flag = false
+      try {
+        R.set('key-a', 1);
+        R.incryby('key-a', 2.3);
+        R.incryby('key-a', 'invalid');
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });  
+    it('should expose error when the type of key not string', function() {
+      var flag = false
+      try {
+        R.set('key-a', 1);
+        R.__types('key-a', 'list');
+        R.incrby('key-a', 1);
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });  
   });
 
   describe('#incr', function() {

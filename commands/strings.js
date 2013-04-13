@@ -26,7 +26,7 @@ R.get = function(key) {
 
 R.getset = function(key, value) {
   this.__check(arguments).whether(
-    'missing_1st_and 2nd', 'key_type_not_string'
+    'missing_1st_and_2nd', 'key_type_not_string'
   ); 
   var old = this.get(key);
   this.set(key, value);
@@ -48,7 +48,7 @@ R.strlen = function(key) {
 
 R.incrby = function(key, amount) {
   this.__check(arguments).whether(
-    'missing_1st_and 2nd', 'key_type_not_string',
+    'missing_1st_and_2nd', 'key_type_not_string',
     'key_val_not_integer', '2nd_not_integer'
   ); 
   if (!this.__store.exists(key)) {
@@ -76,7 +76,7 @@ R.decr = function(key) {
  
 R.incrbyfloat = function(key, amount) {
   this.__check(arguments).whether(
-    'missing_1st_and 2nd', 'key_type_not_string',
+    'missing_1st_and_2nd', 'key_type_not_string',
     'key_val_not_number', '2nd_not_number'
   ); 
   if (!this.__store.exists(key)) {
