@@ -4,9 +4,9 @@ var R = Redis.prototype;
 
 
 R.set = function(key, value) {
-  // require 2 args
-  // require string type
-  // value accept string or number type.
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd'
+  );
   this.__timers.del(key);
   this.__types.set(key, 'string');
   this.__store.set(key, value);
@@ -14,8 +14,9 @@ R.set = function(key, value) {
 
  
 R.get = function(key) {
-  // require 1 arg
-  // require string type
+  this.__check(arguments).whether(
+    'key_type_not_string'
+  );
   if (!this.__store.exists(key)) {
     return null;
   } 
@@ -24,8 +25,9 @@ R.get = function(key) {
 
 
 R.getset = function(key, value) {
-  // require 2 args
-  // require string type
+  this.__check(arguments).whether(
+    'missing_1st_and 2nd', 'key_type_not_string'
+  ); 
   var old = this.get(key);
   this.set(key, value);
   return old;
@@ -33,8 +35,9 @@ R.getset = function(key, value) {
 
 
 R.strlen = function(key) {
-  // require 1 arg
-  // require string sype
+  this.__check(arguments).whether(
+    'key_type_not_string'
+  ); 
   if (this.__store.exists(key)) {
     return this.get(key).length;
   } else {
@@ -44,10 +47,10 @@ R.strlen = function(key) {
 
 
 R.incrby = function(key, amount) {
-  // require 2 args
-  // require string type
-  // require key's value to be an Integer
-  // require amount to be an Integer
+  this.__check(arguments).whether(
+    'missing_1st_and 2nd', 'key_type_not_string',
+    'key_val_not_integer', '2nd_not_integer'
+  ); 
   if (!this.__store.exists(key)) {
     this.set(key, "0");
   } 
@@ -57,9 +60,6 @@ R.incrby = function(key, amount) {
 
  
 R.incr = function(key) {
-  // require 1 arg
-  // require string type
-  // require key's value to be an Integer
   return this.incrby(key, 1);
 }
 
@@ -75,10 +75,10 @@ R.decr = function(key) {
 
  
 R.incrbyfloat = function(key, amount) {
-  // require 2 args
-  // require string type
-  // require key's value to be a number
-  // require amount to be a number     
+  this.__check(arguments).whether(
+    'missing_1st_and 2nd', 'key_type_not_string',
+    'key_val_not_number', '2nd_not_number'
+  ); 
   if (!this.__store.exists(key)) {
     this.set(key, "0");
   }
@@ -88,10 +88,11 @@ R.incrbyfloat = function(key, amount) {
 
 
 R.getrange = function(key, from, to) {
-  // requrie 3 arg
-  // require string type
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd', 'key_type_not_string'
+  ); 
   var string = this.get(key)
-    , len = string.length;
+  var len = string.length;
   return string.substr(
     normalizeOffset(from, len), 
     normalizeOffset(to, len) + 1
@@ -102,6 +103,9 @@ R.getrange = function(key, from, to) {
 R.append = function(key, str) {
   // require 2 args
   // require string type
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd', 'key_type_not_string'
+  );
   if (!this.__store.exists(key)) {
     this.set(key, '');
   }
@@ -120,19 +124,3 @@ function normalizeOffset(offset, length) {
   return offset;
 }
 
-
-/*
-
-if (this.__store.exists(key) && this.__types.get(key) !== 'string') {
-  throw Error('Operation against a key holding the wrong kind of value');  
-}
-
-if (arguments.length < 2) {
-  throw Error('Wrong number of arguments');
-}
-
-if (typeof value !== 'string') {
-  throw Error('Invalid type of value');
-}
-
-*/

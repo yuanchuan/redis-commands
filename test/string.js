@@ -17,7 +17,7 @@ describe('strings.js', function() {
   
   describe('#set()', function() {
     
-    it.skip('should expose when missing arguments', function() {
+    it('should expose when missing arguments', function() {
       var flag = false;
       try {
         R.set();
@@ -31,14 +31,10 @@ describe('strings.js', function() {
       R.set('key-a', 'aaa');
       assert.equal('aaa', R.get('key-a'));
     }); 
-    it.skip('should expose error on settting an array', function() {
-      var flag = false;
-      try {
-        R.set('key-a', [1,2,3]);
-      } catch(e) {
-        assert.ok(flag = true);
-      }
-      assert(flag);
+
+    it('should parse an array to json string', function() {
+      R.set('key-a', [1,2,3]);
+      assert.equal(R.get('key-a'), '[1,2,3]');
     });
 
   });
@@ -46,7 +42,7 @@ describe('strings.js', function() {
 
   describe('#get()', function() {
 
-   it.skip('should expose error when the key with type other than string', function() {
+   it('should expose error when the key with type other than string', function() {
       var flag = false;
       R.__types.set('key-a', 'list');
       try {

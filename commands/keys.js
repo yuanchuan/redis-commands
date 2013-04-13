@@ -37,9 +37,11 @@ R.randomkey = function() {
 
 
 R.pexpire = function(key, msec) {
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd', '2nd_not_integer'
+  );
   if (!this.exists(key)) return 0;
   if (msec < 0)  msec = 0;
-  if (isNaN(+msec)) throw Error('Not an integer or out of range');
   this.__timers.set(key, msec, (function() {
     this.del(key);
   }).bind(this));
@@ -48,18 +50,27 @@ R.pexpire = function(key, msec) {
 
  
 R.expire = function(key, sec) {
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd', '2nd_not_integer'
+  );
   var msec = sec * 1e3;
   return this.pexpire(key, msec); 
-}
-
+} 
+ 
 
 R.pexpireat = function(key, umsec) {
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd', '2nd_not_integer'
+  ); 
   var msec = umsec - Date.now();
   return this.pexpire(key, msec);
 }
 
 
 R.expireat = function(key, usec) {
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd', '2nd_not_integer'
+  ); 
   var msec = (usec - Math.floor(Date.now() / 1e3)) * 1e3;
   return this.pexpire(key, msec);
 }
@@ -87,12 +98,9 @@ R.persist = function(key) {
 
 
 R.rename = function(key1, key2) {
-  if (!this.exists(key1)) {
-    throw Error("No such key");
-  }
-  if (key1 === key2) {
-    throw Error("Source and destination objects are the same")
-  }
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd', '1st_not_exist', '1st_and_2nd_equal'
+  ); 
   this.del(key2);
   this.__store.set(key2, this.__store.get(key1)); 
   if (this.__timers.exists(key1)) {
@@ -103,9 +111,9 @@ R.rename = function(key1, key2) {
 
 
 R.renamenx = function(key1, key2) {
-  if (key1 === key2) {
-    throw Error("Source and destination objects are the same")
-  } 
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd', '1st_and_2nd_equal'
+  ); 
   if (this.exists(key2)) return 0;
   this.rename(key1, key2);
   return 1;

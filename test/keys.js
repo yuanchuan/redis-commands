@@ -119,6 +119,26 @@ describe('Keys.js', function() {
       }
       assert.ok(flag);
     });
+
+    it('should expose error with float value', function() {
+      var flag = false;
+      try {
+        R.pexpire('key-a','2.34');
+      } catch(e) {
+        assert.ok(flag = true);  
+      }
+      assert.ok(flag);
+    });
+        
+    it('should expose error with missing arguments', function() {
+      var flag = false;
+      try {
+        R.pexpire('key-a');
+      } catch(e) {
+        assert.ok(flag = true);  
+      }
+      assert.ok(flag);
+    }); 
   });
 
   
