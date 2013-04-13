@@ -40,10 +40,34 @@ describe('strings.js', function() {
   });
 
   describe('#setnx()', function() {
-    it.only('should return 0 when the key exists', function() {
+    it('should return 0 when the key exists', function() {
       assert.equal(0, R.setnx('key-a', 'b'));
     });
   });
+
+
+  describe('#setex()', function() {
+    it('should set a key and expire a key with second', function(done) {
+      R.setex('key-z', 1, 'ab');
+      assert.equal('ab', R.get('key-z'));
+      setTimeout(function() {
+        assert.ok(!R.exists('key-z'));
+        done();
+      }, 1000);
+    });
+  }); 
+
+  describe('#psetnx()', function() {
+    it('should set a key and expire a key with millisecond', function(done) {
+      R.psetex('key-a', 200, 'ab');
+      assert.equal('ab', R.get('key-a'));
+      setTimeout(function() {
+        assert.ok(!R.exists('key-a'));
+        done();
+      }, 200); 
+
+    });
+  }); 
 
   describe('#get()', function() {
 

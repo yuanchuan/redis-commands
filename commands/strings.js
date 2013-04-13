@@ -23,6 +23,24 @@ R.setnx = function(key, value) {
   set(key, value);
 }
 
+
+R.setex = function(key, sec, value) {
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd'
+  );
+  this.set(key, value);
+  this.expire(key, sec);
+}
+
+
+R.psetex = function(key, msec, value) {
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd'
+  );
+  this.set(key, value);
+  this.pexpire(key, msec);
+}
+
  
 R.get = function(key) {
   this.__check(arguments).whether(
