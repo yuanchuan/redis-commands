@@ -101,8 +101,6 @@ R.getrange = function(key, from, to) {
 
 
 R.append = function(key, str) {
-  // require 2 args
-  // require string type
   this.__check(arguments).whether(
     'missing_1st_and_2nd', 'key_type_not_string'
   );
