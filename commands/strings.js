@@ -7,6 +7,11 @@ R.set = function(key, value) {
   this.__check(arguments).whether(
     'missing_1st_and_2nd'
   );
+  if (typeof value === 'number') {
+    value += '';  
+  } else if (typeof value !== 'string') {
+    value = JSON.stringify(value);
+  }
   this.__timers.del(key);
   this.__types.set(key, 'string');
   this.__store.set(key, value);

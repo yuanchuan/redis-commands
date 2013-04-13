@@ -12,11 +12,6 @@ Store.prototype.get = function(key) {
 }
  
 Store.prototype.set = function(key, name) {
-  if (typeof name === 'number') {
-    name = '' + name;
-  } else if (typeof name !== 'string') {
-    name = JSON.stringify(name);  
-  }
   this.memo[key] = name;
 }
 
