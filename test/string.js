@@ -39,6 +39,11 @@ describe('strings.js', function() {
 
   });
 
+  describe('#setnx()', function() {
+    it.only('should return 0 when the key exists', function() {
+      assert.equal(0, R.setnx('key-a', 'b'));
+    });
+  });
 
   describe('#get()', function() {
 

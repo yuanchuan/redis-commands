@@ -12,6 +12,17 @@ R.set = function(key, value) {
   this.__store.set(key, value);
 }
 
+
+R.setnx = function(key, value) {
+  this.__check(arguments).whether(
+    'missing_1st_and_2nd'
+  ); 
+  if (this.__store.exists(key)) {
+    return 0;
+  }
+  set(key, value);
+}
+
  
 R.get = function(key) {
   this.__check(arguments).whether(
