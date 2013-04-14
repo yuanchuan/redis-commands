@@ -2,8 +2,6 @@ var assert = require('assert');
 var should = require('should');
 var Redis = require('../commands/keys');
 
-
-
 describe('Keys.js', function() {
 
   var R = new Redis();
@@ -21,65 +19,51 @@ describe('Keys.js', function() {
     it('should return 1 to an existed key', function() {
       assert.strictEqual(1, R.exists('key-a'));
     })
-
     it('should return 0 to an unkown key', function(){
       assert.strictEqual(0, R.exists('key-unkown'));
     }) 
-
   })
 
   describe('#del()', function() {
-   
     it('should be able to delete a single key', function() {
       R.del('key-a');
       assert.equal(0, R.exists('key-a'))  
     })
-
     it('should return 1 of the single deleted key', function() {
       var single = R.del('key-b');
       assert.equal(1, single)  
     }) 
-
     it('should be able to delete multiple key', function() {
       R.del('key-a', 'key-b', 'key-c');
       assert.equal(0, R.exists('key-a'))  
       assert.equal(0, R.exists('key-b'))  
       assert.equal(0, R.exists('key-c'))  
     }) 
-
     it('should return 3 number of the multiple deleted key', function() {
       var multiple = R.del('key-a', 'key-b', 'key-c');
       assert.equal(3, multiple)  
     }) 
-
     it('should return 2 number of 2 successfully deleted existed key and an unkown key', function() {
       var multiple = R.del('key-a', 'key-b', 'key-unkown');
       assert.equal(2, multiple)  
     })    
-
   });
 
-
   describe('#keys()', function() {
-
     it('should return key-a', function() {
       var key = R.keys('*-a');  
       assert.equal('key-a', key);
     });
-
     it('should return all keys', function() {
       var key = R.keys('key-*');  
       R.__store.keys().should.have.lengthOf(26);
     });
-
     it('should return all keys', function() {
       var key = R.keys('k?y');  
       R.__store.keys().should.have.lengthOf(26);
     });      
-
   });
 
- 
   describe('#randomkey()', function() {
     it('should return a key', function() {
       var key = R.randomkey();
@@ -87,7 +71,6 @@ describe('Keys.js', function() {
     });
   });
 
- 
   describe('#pexpire()', function() {
     it('should expire a key with millisecond', function(done) {
       R.pexpire('key-a', 100);    
@@ -96,7 +79,6 @@ describe('Keys.js', function() {
         done();
       }, 120);
     });
-
     it('should convert negative millisecond to 0, expire immediately', function(done) {
       R.pexpire('key-a', -200);    
       setTimeout(function() {
@@ -104,7 +86,6 @@ describe('Keys.js', function() {
         done();
       }, 0);
     });         
-
     it('should reset timers', function(done) {
       R.pexpire('key-a', 200);
       setTimeout(function() {
@@ -113,7 +94,6 @@ describe('Keys.js', function() {
         done();
       }, 100);
     });
-
     it('should expose error with bad arguments', function() {
       var flag = false;
       try {
@@ -123,7 +103,6 @@ describe('Keys.js', function() {
       }
       assert.ok(flag);
     });
-
     it('should expose error with float value', function() {
       var flag = false;
       try {
@@ -133,7 +112,6 @@ describe('Keys.js', function() {
       }
       assert.ok(flag);
     });
-        
     it('should expose error with missing arguments', function() {
       var flag = false;
       try {
@@ -145,7 +123,6 @@ describe('Keys.js', function() {
     }); 
   });
 
-  
   describe('#expire()', function() {
     it('should expire a key with second', function(done) {
       R.expire('key-a', 1);
@@ -155,7 +132,6 @@ describe('Keys.js', function() {
       }, 1000);
     });
   });
-
 
   describe('#pexpireat()', function() {
     it('should expire a key with a unix time in millisecond', function(done) {
@@ -177,7 +153,6 @@ describe('Keys.js', function() {
     });
   });         
 
-
   describe('#pttl()', function() {
     it('should return the time left of an expiring key in millisecond', function(done) {
       R.pexpire('key-a', 200);    
@@ -186,16 +161,13 @@ describe('Keys.js', function() {
         done();
       }, 100);
     });
-
     it('should return -2 if a key does not exist', function() {
       assert.equal(-2, R.pttl('key-unkown'));
     }); 
-
     it('should return -1 if a key does not expiring', function() {
       assert.equal(-1, R.pttl('key-b'));
     });         
   });
-
 
   describe('#ttl()', function() {
     it('should return the time left of an expiring key in second', function(done) {
@@ -205,19 +177,15 @@ describe('Keys.js', function() {
         done();
       }, 1000);
     });
-
     it('should return 1 if the time is less than a second', function(done) {
       R.expire('key-c', 1);    
       setTimeout(function() {
         assert.equal(1, R.ttl('key-c'));
         done();
       }, 100); 
-      
     }); 
-             
   });
        
-
   describe('#persist()', function() {
     it('should make an expiring key persist', function(done) {
       R.pexpire('key-a', 100);  
@@ -229,14 +197,12 @@ describe('Keys.js', function() {
     });
   });
 
-
   describe('#rename()', function() {
     it('should rename two existed keys', function() {
       R.rename('key-a', 'key-b');
       assert.equal(0, R.exists('key-a'));
       assert.equal('a',  R.__store.get('key-b'));
     });
-
     it('should expose error when the first key does not exist', function() {
       var flag = false;
       try {
@@ -246,7 +212,6 @@ describe('Keys.js', function() {
       }
       assert.ok(flag);
     });  
-
     it('should expose error when the two keys are the same', function() {
       var flag = false;
       try {
@@ -256,27 +221,21 @@ describe('Keys.js', function() {
       }
       assert.ok(flag);
     });      
-
     it('should transfer the timer to the new key if set', function() {
       R.expire('key-a', 5);
       R.rename('key-a', 'key-x')
       assert.ok( R.ttl('key-x') > 0);
       assert.equal(-2, R.ttl('key-a'));
     });
-
   });
 
-
   describe('#renamenx()', function() {
-
     it("should return 1 if key was renamed to newkey", function() {
       assert.equal(1, R.renamenx('key-a', 'key-new'));
     });
-
     it("should return 0 if newkey already exists", function() {
       assert.equal(0, R.renamenx('key-a', 'key-b'));
     });     
-
     it('should expose error as in rename', function() {
       var flag = false;
       try {
@@ -286,7 +245,6 @@ describe('Keys.js', function() {
       }
       assert.ok(flag);
     }); 
-    
   });
 
 })

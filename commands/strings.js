@@ -5,7 +5,7 @@ var R = Redis.prototype;
 
 R.set = function(key, value) {
   this.__check(arguments).whether(
-    'missing_1st_and_2nd'
+    'missing_1st_or_2nd'
   );
   if (typeof value === 'number') {
     value += '';  
@@ -20,7 +20,7 @@ R.set = function(key, value) {
 
 R.setnx = function(key, value) {
   this.__check(arguments).whether(
-    'missing_1st_and_2nd'
+    'missing_1st_or_2nd'
   ); 
   if (this.__store.exists(key)) {
     return 0;
@@ -61,7 +61,7 @@ R.get = function(key) {
 
 R.getset = function(key, value) {
   this.__check(arguments).whether(
-    'missing_1st_and_2nd', 'key_type_not_string'
+    'missing_1st_or_2nd', 'key_type_not_string'
   ); 
   var old = this.get(key);
   this.set(key, value);
@@ -95,7 +95,6 @@ R.msetnx = function(key, value/* , key, value... */) {
   ); 
   for (var i = 0, status = 1; i < arguments.length; i +=2 ) {
     if ( !status ) return 0;
-    console.log(status);
     status = this.setnx(arguments[i], arguments[i + 1]);
   }
   return 1;
@@ -116,7 +115,7 @@ R.strlen = function(key) {
 
 R.incrby = function(key, amount) {
   this.__check(arguments).whether(
-    'missing_1st_and_2nd', 'key_type_not_string',
+    'missing_1st_or_2nd', 'key_type_not_string',
     'key_val_not_integer', '2nd_not_integer'
   ); 
   if (!this.__store.exists(key)) {
@@ -144,7 +143,7 @@ R.decr = function(key) {
  
 R.incrbyfloat = function(key, amount) {
   this.__check(arguments).whether(
-    'missing_1st_and_2nd', 'key_type_not_string',
+    'missing_1st_or_2nd', 'key_type_not_string',
     'key_val_not_number', '2nd_not_number'
   ); 
   if (!this.__store.exists(key)) {
@@ -185,7 +184,7 @@ R.setrange = function(key, offset, replacer) {
 
 R.append = function(key, str) {
   this.__check(arguments).whether(
-    'missing_1st_and_2nd', 'key_type_not_string'
+    'missing_1st_or_2nd', 'key_type_not_string'
   );
   if (!this.__store.exists(key)) {
     this.set(key, '');

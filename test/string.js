@@ -16,9 +16,7 @@ describe('strings.js', function() {
     });
   });
 
-  
   describe('#set()', function() {
-    
     it('should expose when missing arguments', function() {
       var flag = false;
       try {
@@ -28,17 +26,14 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-
     it('should set a plain string', function() {
       R.set('key-a', 'aaa');
       assert.equal('aaa', R.get('key-a'));
     }); 
-
     it('should parse an array to json string', function() {
       R.set('key-a', [1,2,3]);
       assert.equal(R.get('key-a'), '[1,2,3]');
     });
-
   });
 
   describe('#setnx()', function() {
@@ -46,7 +41,6 @@ describe('strings.js', function() {
       assert.equal(0, R.setnx('key-a', 'b'));
     });
   });
-
 
   describe('#setex()', function() {
     it('should set a key and expire a key with second', function(done) {
@@ -67,12 +61,10 @@ describe('strings.js', function() {
         assert.equal(0, R.exists('key-a'));
         done();
       }, 200); 
-
     });
   }); 
 
   describe('#get()', function() {
-
    it('should expose error when the key with type other than string', function() {
       var flag = false;
       R.__types.set('key-a', 'list');
@@ -83,15 +75,12 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
- 
     it('should return the value of a specified key', function() {
       assert.equal('a', R.get('key-a'));
     });
-
     it('should return null of a non-existing key', function() {
       assert.strictEqual(null, R.get('key-empty'));
     });
-
   });
 
   describe('#getset()', function() {
@@ -100,7 +89,6 @@ describe('strings.js', function() {
       var oldval = R.getset('key-a', 'newval');
       assert.equal('oldval', oldval);
     });
-
     it('should return new value of the key', function() {
       R.getset('key-b', 'newval');
       assert.equal('newval', R.get('key-b'));
@@ -130,7 +118,6 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-
     it('should set multiple key at once', function() {
       R.mset('key-a', 'aa', 'key-b', 'bb');
       assert.equal('aa', R.get('key-a'));
@@ -149,7 +136,6 @@ describe('strings.js', function() {
       R.set('key-a', 'hello');
       assert.equal(5, R.strlen('key-a'));  
     });
-
     it('should return 0 of non-existing key', function() {
       assert.equal(0, R.strlen('nonexisting'))
     });
@@ -235,7 +221,6 @@ describe('strings.js', function() {
     it('should return -1 to an non-existing key', function() {
       assert.equal(-1, R.decr('key-empty'));  
     });
-
     it('should return 1', function() {
       R.set('key-b', 2);
       assert.equal(1, R.decr('key-b'));  
@@ -259,7 +244,6 @@ describe('strings.js', function() {
       R.set('key-a', 2);
       assert.equal(102, R.incrbyfloat('key-a', 1e2));
     }); 
-
   });
 
   describe('#getrange()', function() {
@@ -276,9 +260,7 @@ describe('strings.js', function() {
     });
   });
 
-
   describe('#setrange()', function() {
-
     it('should expose error with negative offset', function() {
       var flag = false;
       try {
@@ -288,9 +270,7 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-
     it('should set range properly', function() {
-
       R.set('key-a', 'abcdefg');
       R.setrange('key-a', 2, 'xyz')
       assert.equal('abxyzfg', R.get('key-a'));

@@ -7,7 +7,7 @@ module.exports = {
     }
   },
 
-  'missing_1st_and_2nd': function() {
+  'missing_1st_or_2nd': function() {
     if (arguments.length < 2) {
       throw Error("Wrong number of arguments");
     }
