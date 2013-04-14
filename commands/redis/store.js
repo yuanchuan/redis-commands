@@ -27,3 +27,28 @@ store.prototype.delAll = function() {
   this.memo = Object.create(null);
 }
 
+store.prototype.hexists = function(hash, field) {
+  if (!this.exists(hash)) return false; 
+  if (this.memo[hash] === undefined) return false;      
+  return {}.hasOwnProperty.call(this.memo[hash], field);
+}
+
+store.prototype.hset = function(hash, field, value) {
+  var retval = 0;
+  if (!this.hexists(hash, field)) {
+    this.memo[hash] = Object.create(null);
+    retval = 1;
+  }
+  this.memo[hash][field] = value;
+  return retval;
+}
+
+store.prototype.hget = function(hash, field) {
+  return this.memo[hash][field];
+}
+
+store.prototype.hdel = function(hash, field) {
+  if (!this.memo[hash] === undefined) {
+    delete this.memo[hash][field];
+  }
+}

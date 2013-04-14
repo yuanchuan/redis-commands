@@ -38,12 +38,26 @@ module.exports = {
     }
   },
 
+  '3rd_not_integer': function() {
+    var arg = arguments[2];
+    if (isNaN(+arg) || arg % 1 !== 0) {
+      throw Error('Value is not an integer or out of range');
+    }
+  },
+ 
   'key_type_not_string': function() {
     var key = arguments[0];
     if (this.__store.exists(key) && this.__types.get(key) !== 'string') {
       throw Error('Operation against a key holding the wrong kind of value');  
     } 
   },
+ 
+  'key_type_not_hash': function() {
+    var key = arguments[0];
+    if (this.__store.exists(key) && this.__types.get(key) !== 'hash') {
+      throw Error('Operation against a key holding the wrong kind of value');  
+    } 
+  }, 
 
   'key_val_not_integer': function() {
     var key = arguments[0];
@@ -70,6 +84,12 @@ module.exports = {
       throw Error('Value is not a valid float');
     }
   },
+
+  '3rd_not_number': function() {
+    if (isNaN(+arguments[2])) {
+      throw Error('Value is not a valid float');
+    }
+  }, 
   
   'odd_args': function() {
     if (arguments.length < 1 || arguments.length % 2 !== 0) {
@@ -80,6 +100,12 @@ module.exports = {
   '2nd_negative': function() {
     if (arguments[1] < 0) {
       throw Error('Value out of range');
+    }
+  },
+
+  'even_args': function() {
+    if (arguments.length % 2 === 0) {
+      throw Error('Wrong number of arguments');
     }
   }
 
