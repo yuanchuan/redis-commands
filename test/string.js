@@ -40,6 +40,10 @@ describe('strings.js', function() {
     it('should return 0 when the key exists', function() {
       assert.equal(0, R.setnx('key-a', 'b'));
     });
+    it('should return 1 when the key has been set', function() {
+      assert.equal(1, R.setnx('key-empty', 'b'));
+      assert.equal('b', R.get('key-empty'));
+    }); 
   });
 
   describe('#setex()', function() {

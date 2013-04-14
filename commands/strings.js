@@ -25,7 +25,7 @@ R.setnx = function(key, value) {
   if (this.__store.exists(key)) {
     return 0;
   }
-  set(key, value);
+  this.set(key, value);
   return 1;
 }
 
