@@ -1,7 +1,5 @@
 
-var store = require('./store');
 var timers = require('./timers');
-var types = require('./types');
 var check = require('./check'); 
  
 /**
