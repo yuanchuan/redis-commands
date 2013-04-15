@@ -5,7 +5,7 @@ var R = Redis.prototype;
 
 
 R.exists = function(key) {
-  return this.__store.exists(key) ? 1 : 0;
+  return {}.hasOwnProperty.call(this.__keys, key) ? 1 : 0;
 }                
 
 
@@ -13,9 +13,8 @@ R.del = function(/* key1, key2... */) {
   var count = 0;
   [].forEach.call(arguments, (function(key) {
     if (this.exists(key)) {
-      this.__store.del(key);
       this.__timers.del(key);
-      this.__types.del(key);
+      delete this.__keys[key];
       count += 1;
     }
   }).bind(this));
@@ -24,14 +23,14 @@ R.del = function(/* key1, key2... */) {
 
 
 R.keys = function(pattern) {
-  return this.__store.keys().filter(function(key) {
+  return Object.keys(this.__keys).filter(function(key) {
     return minimatch(key, pattern || '');
   });
 }
 
  
 R.randomkey = function() {  
-  var keys = this.__store.keys();
+  var keys = Object.keys(this.__keys);
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
@@ -102,7 +101,7 @@ R.rename = function(key1, key2) {
     'missing_1st_or_2nd', '1st_not_exist', '1st_and_2nd_equal'
   ); 
   this.del(key2);
-  this.__store.set(key2, this.__store.get(key1)); 
+  this.__keys[key2] = this.__keys[key1]; 
   if (this.__timers.exists(key1)) {
     this.pexpire(key2, this.pttl(key1));
   }
@@ -121,7 +120,9 @@ R.renamenx = function(key1, key2) {
 
 
 R.type = function(key) {
-  return this.__types.get[key];
+  if (this.exists(key)) {
+    return this.__keys[key].type;
+  }
 }
 
 
