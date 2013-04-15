@@ -8,13 +8,9 @@ describe('strings.js', function() {
   var R = new Redis();
 
   beforeEach(function() {
-    R.__timers.delAll();
-    R.__keys = Object.create(null);
+    R.flushdb();
     'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(key) {
-      R.__keys['key-' + key] = {
-        type: 'string',
-        store: key
-      };
+      R.set('key-' +key, key);
     });
   });
 
@@ -73,7 +69,7 @@ describe('strings.js', function() {
   describe('#get()', function() {
    it('should expose error when the key with type other than string', function() {
       var flag = false;
-      R.__keys['key-a'].type = 'list';
+      R.__keys.set('key-a', 'list');
       try {
         R.get('key-a');
       } catch(e) {
@@ -193,7 +189,7 @@ describe('strings.js', function() {
       var flag = false
       try {
         R.set('key-a', 1);
-        R.__types('key-a', 'list');
+        R.__keys.set('key-a', 'list');
         R.incrby('key-a', 1);
       } catch(e) {
         assert.ok(flag = true);

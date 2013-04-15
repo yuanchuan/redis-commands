@@ -2,48 +2,42 @@
 var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
-
-R.set = function(key, value) {
+R.set = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   );
-  if (typeof value !== 'string') {
-    value = JSON.stringify(value);
-  }
-  this.__keys[key] = {
-    type: 'string',
-    store: value
-  }
+  this.__keys.set(key, 'string'); 
+  this.__store.string.set(key, val);
   this.__timers.del(key);
 }
 
 
-R.setnx = function(key, value) {
+R.setnx = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   ); 
   if (this.exists(key)) {
     return 0;
   }
-  this.set(key, value);
+  this.set(key, val);
   return 1;
 }
 
 
-R.setex = function(key, sec, value) {
+R.setex = function(key, sec, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd'
   );
-  this.set(key, value);
+  this.set(key, val);
   this.expire(key, sec);
 }
 
 
-R.psetex = function(key, msec, value) {
+R.psetex = function(key, msec, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd'
   );
-  this.set(key, value);
+  this.set(key, val);
   this.pexpire(key, msec);
 }
 
@@ -55,16 +49,16 @@ R.get = function(key) {
   if (!this.exists(key)) {
     return null;
   } 
-  return this.__keys[key].store;
+  return this.__store.string.get(key);
 }
 
 
-R.getset = function(key, value) {
+R.getset = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_string'
   ); 
   var old = this.get(key);
-  this.set(key, value);
+  this.set(key, val);
   return old;
 }
 
@@ -79,7 +73,7 @@ R.mget = function(/* key1, key2... */) {
 }
 
 
-R.mset = function(key, value/* , key, value... */) {
+R.mset = function(key, val/* , key, val... */) {
   this.__check(arguments).whether(
     'odd_args'
   ); 
@@ -89,7 +83,7 @@ R.mset = function(key, value/* , key, value... */) {
 }
 
 
-R.msetnx = function(key, value/* , key, value... */) {
+R.msetnx = function(key, val/* , key, val... */) {
   this.__check(arguments).whether(
     'odd_args'
   ); 
@@ -177,7 +171,7 @@ R.setrange = function(key, offset, replacer) {
   var gap = len < offset ? new Array(offset - len).join('\x00') : '';
   var rest = origin.substr(offset + replacer.length);
   var result = origin.substr(0, offset).concat(gap, replacer, rest);
-  this.__keys[key].store= result;
+  this.__store.string.set(key, result);
   return result.length;
 }
 
