@@ -7,11 +7,12 @@ describe('Keys.js', function() {
   var R = new Redis();
 
   beforeEach(function() {
-    R.__store.delAll();
     R.__timers.delAll();
-    R.__types.delAll();
+    R.__keys = Object.create(null);
     'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(key) {
-      R.__store.set('key-' + key, key);
+      R.__keys['key-' + key] = {
+        store: key
+      }
     });
   });
 
@@ -56,18 +57,18 @@ describe('Keys.js', function() {
     });
     it('should return all keys', function() {
       var key = R.keys('key-*');  
-      R.__store.keys().should.have.lengthOf(26);
+      Object.keys(R.__keys).should.have.lengthOf(26);
     });
     it('should return all keys', function() {
       var key = R.keys('k?y');  
-      R.__store.keys().should.have.lengthOf(26);
+      Object.keys(R.__keys).should.have.lengthOf(26);
     });      
   });
 
   describe('#randomkey()', function() {
     it('should return a key', function() {
       var key = R.randomkey();
-      R.__store.keys().should.include(key);
+      Object.keys(R.__keys).should.include(key);
     });
   });
 
@@ -201,7 +202,7 @@ describe('Keys.js', function() {
     it('should rename two existed keys', function() {
       R.rename('key-a', 'key-b');
       assert.equal(0, R.exists('key-a'));
-      assert.equal('a',  R.__store.get('key-b'));
+      assert.equal('a',  R.__keys['key-b'].store);
     });
     it('should expose error when the first key does not exist', function() {
       var flag = false;
