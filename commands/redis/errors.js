@@ -47,22 +47,22 @@ module.exports = {
  
   'key_type_not_string': function() {
     var key = arguments[0];
-    if (this.__store.exists(key) && this.__types.get(key) !== 'string') {
+    if (this.exists(key) && this.type(key) !== 'string') {
       throw Error('Operation against a key holding the wrong kind of value');  
     } 
   },
  
   'key_type_not_hash': function() {
     var key = arguments[0];
-    if (this.__store.exists(key) && this.__types.get(key) !== 'hash') {
+    if (this.exists(key) && this.type(key) !== 'hash') {
       throw Error('Operation against a key holding the wrong kind of value');  
     } 
   }, 
 
   'key_val_not_integer': function() {
     var key = arguments[0];
-    if (this.__store.exists(key)) {
-      var val = this.__store.get(key);
+    if (this.exists(key)) {
+      var val = this.get(key);
       if (isNaN(+val) || val % 1 !== 0) {
         throw Error('Value is not an integer or out of range');
       }
@@ -71,8 +71,8 @@ module.exports = {
              
   'key_val_not_number': function() {
     var key = arguments[0]
-    if (this.__store.exists(key)) {
-      var val = this.__store.get(key);
+    if (this.exists(key)) {
+      var val = this.get(key);
       if (isNaN(+val) || val % 1 !== 0) {
         throw Error('Value is not a valid float');
       }

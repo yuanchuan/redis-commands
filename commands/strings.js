@@ -7,14 +7,14 @@ R.set = function(key, value) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   );
-  if (typeof value === 'number') {
-    value += '';  
-  } else if (typeof value !== 'string') {
+  if (typeof value !== 'string') {
     value = JSON.stringify(value);
   }
+  this.__keys[key] = {
+    type: 'string',
+    store: value
+  }
   this.__timers.del(key);
-  this.__types.set(key, 'string');
-  this.__store.set(key, value);
 }
 
 
@@ -22,7 +22,7 @@ R.setnx = function(key, value) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   ); 
-  if (this.__store.exists(key)) {
+  if (this.exists(key)) {
     return 0;
   }
   this.set(key, value);
@@ -52,10 +52,10 @@ R.get = function(key) {
   this.__check(arguments).whether(
     'key_type_not_string'
   );
-  if (!this.__store.exists(key)) {
+  if (!this.exists(key)) {
     return null;
   } 
-  return this.__store.get(key);
+  return this.__keys[key].store;
 }
 
 
@@ -105,7 +105,7 @@ R.strlen = function(key) {
   this.__check(arguments).whether(
     'key_type_not_string'
   ); 
-  if (this.__store.exists(key)) {
+  if (this.exists(key)) {
     return this.get(key).length;
   } else {
     return 0;
@@ -118,7 +118,7 @@ R.incrby = function(key, amount) {
     'missing_1st_or_2nd', 'key_type_not_string',
     'key_val_not_integer', '2nd_not_integer'
   ); 
-  if (!this.__store.exists(key)) {
+  if (!this.exists(key)) {
     this.set(key, "0");
   } 
   this.set(key, parseInt(this.get(key), 10) + amount);
@@ -146,7 +146,7 @@ R.incrbyfloat = function(key, amount) {
     'missing_1st_or_2nd', 'key_type_not_string',
     'key_val_not_number', '2nd_not_number'
   ); 
-  if (!this.__store.exists(key)) {
+  if (!this.exists(key)) {
     this.set(key, "0");
   }
   this.set(key, (+this.get(key)) + (+amount));
@@ -177,7 +177,7 @@ R.setrange = function(key, offset, replacer) {
   var gap = len < offset ? new Array(offset - len).join('\x00') : '';
   var rest = origin.substr(offset + replacer.length);
   var result = origin.substr(0, offset).concat(gap, replacer, rest);
-  this.__store.set(key, result);
+  this.__keys[key].store= result;
   return result.length;
 }
 
@@ -186,7 +186,7 @@ R.append = function(key, str) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_string'
   );
-  if (!this.__store.exists(key)) {
+  if (!this.exists(key)) {
     this.set(key, '');
   }
   this.set(key, this.get(key) + str);
