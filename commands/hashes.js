@@ -16,7 +16,7 @@ R.hset = function(hkey, field, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_hash'
   );
-  var retval = this.hexists(hash, field) ? 0 : 1;
+  var retval = this.hexists(hkey, field) ? 0 : 1;
   this.__timers.del(hkey);
   this.__keys.set(hkey, 'hash');
   this.__store.hash.set(hkey, field, val);
@@ -28,7 +28,7 @@ R.hsetnx = function(hash, field, value) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_hash'
   ); 
-  if (!hexists(hash, field)) {
+  if (!this.hexists(hash, field)) {
     return this.hset(hash, field, value);
   }
   return 0;
@@ -75,9 +75,9 @@ R.hvals = function(hkey) {
   this.__check(arguments).whether(
     'missing_1st', 'key_type_not_hash'
   ); 
-  return this.exists(hash) 
-    ? this.hkeys().map((function(field) {
-        return this.get(hkey, field);
+  return this.exists(hkey) 
+    ? this.hkeys(hkey).map((function(field) {
+        return this.hget(hkey, field);
       }).bind(this))
     : [];
 }
@@ -89,7 +89,7 @@ R.hgetall = function(hkey) {
   var retarr = [];
   if (this.exists(hkey)) {
     this.hkeys(hkey).forEach((function(field) {
-      ret.push(field, this.hget(hkey, field));
+      retarr.push(field, this.hget(hkey, field));
     }).bind(this));
   }
   return retarr;
@@ -118,15 +118,16 @@ R.hmget = function(hkey /*, field, field2,... */) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   ); 
-  [].slice.call(arguments, 1).map((function(field) {
+  return [].slice.call(arguments, 1).map((function(field) {
     return this.hget(hkey, field);    
   }).bind(this));
 }
 
 
-R.hincryby = function(hkey, field, amount) {
+R.hincrby = function(hkey, field, amount) {
   this.__check(arguments).whether(
-    'missing_1st_to_3rd', 'key_type_not_hash', '3rd_not_integer'
+    'missing_1st_to_3rd', 'key_type_not_hash',
+    'field_val_not_integer', '3rd_not_integer'
   ); 
   if (!this.hexists(hkey, field)) {
     this.hset(hkey, field, 0);
@@ -136,9 +137,10 @@ R.hincryby = function(hkey, field, amount) {
 }
 
 
-R.hincrybyfloat = function(hkey, field, val) {
+R.hincrbyfloat = function(hkey, field, amount) {
   this.__check(arguments).whether(
-    'missing_1st_to_3rd', 'key_type_not_hash', '3rd_not_number'
+    'missing_1st_to_3rd', 'key_type_not_hash', 
+    'field_val_not_number', '3rd_not_number'
   ); 
   if (!this.hexists(hkey, field)) {
     this.hset(hkey, field, 0);

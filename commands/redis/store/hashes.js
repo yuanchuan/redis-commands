@@ -32,6 +32,10 @@ hashes.prototype.del = function(hkey, field) {
   }
 }
 
+hashes.prototype.delAll = function() {
+  this.memo = Object.create(null);  
+}
+
 hashes.prototype.fields = function(hkey) {
   if (this.memo[hkey] !== undefined) {
     return Object.keys(this.memo[hkey]);
