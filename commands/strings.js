@@ -2,51 +2,41 @@
 var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
-
-R.set = function(key, value) {
+R.set = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   );
-  if (typeof value !== 'string') {
-    value = JSON.stringify(value);
-  }
-  this.__keys[key] = {
-    type: 'string',
-    store: value
-  }
+  this.__keys.set(key, 'string'); 
+  this.__store.string.set(key, val);
   this.__timers.del(key);
 }
 
-
-R.setnx = function(key, value) {
+R.setnx = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   ); 
   if (this.exists(key)) {
     return 0;
   }
-  this.set(key, value);
+  this.set(key, val);
   return 1;
 }
 
-
-R.setex = function(key, sec, value) {
+R.setex = function(key, sec, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd'
   );
-  this.set(key, value);
+  this.set(key, val);
   this.expire(key, sec);
 }
 
-
-R.psetex = function(key, msec, value) {
+R.psetex = function(key, msec, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd'
   );
-  this.set(key, value);
+  this.set(key, val);
   this.pexpire(key, msec);
 }
-
  
 R.get = function(key) {
   this.__check(arguments).whether(
@@ -55,19 +45,17 @@ R.get = function(key) {
   if (!this.exists(key)) {
     return null;
   } 
-  return this.__keys[key].store;
+  return this.__store.string.get(key);
 }
 
-
-R.getset = function(key, value) {
+R.getset = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_string'
   ); 
   var old = this.get(key);
-  this.set(key, value);
+  this.set(key, val);
   return old;
 }
-
 
 R.mget = function(/* key1, key2... */) {
   this.__check(arguments).whether(
@@ -78,8 +66,7 @@ R.mget = function(/* key1, key2... */) {
   }).bind(this));
 }
 
-
-R.mset = function(key, value/* , key, value... */) {
+R.mset = function(key, val/* , key, val... */) {
   this.__check(arguments).whether(
     'odd_args'
   ); 
@@ -88,8 +75,7 @@ R.mset = function(key, value/* , key, value... */) {
   }
 }
 
-
-R.msetnx = function(key, value/* , key, value... */) {
+R.msetnx = function(key, val/* , key, val... */) {
   this.__check(arguments).whether(
     'odd_args'
   ); 
@@ -99,7 +85,6 @@ R.msetnx = function(key, value/* , key, value... */) {
   }
   return 1;
 }
-
 
 R.strlen = function(key) {
   this.__check(arguments).whether(
@@ -112,7 +97,6 @@ R.strlen = function(key) {
   }
 }
 
-
 R.incrby = function(key, amount) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_string',
@@ -124,22 +108,18 @@ R.incrby = function(key, amount) {
   this.set(key, parseInt(this.get(key), 10) + amount);
   return this.get(key); 
 }
-
  
 R.incr = function(key) {
   return this.incrby(key, 1);
 }
 
-
 R.decrby = function(key, amount) {
   return this.incrby(key, -1 * amount);
 }
-
  
 R.decr = function(key) {
   return this.incrby(key, -1);
 }
-
  
 R.incrbyfloat = function(key, amount) {
   this.__check(arguments).whether(
@@ -153,7 +133,6 @@ R.incrbyfloat = function(key, amount) {
   return this.get(key);
 }
 
-
 R.getrange = function(key, from, to) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_string'
@@ -166,7 +145,6 @@ R.getrange = function(key, from, to) {
   );
 }
 
-
 R.setrange = function(key, offset, replacer) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_string', 
@@ -177,10 +155,9 @@ R.setrange = function(key, offset, replacer) {
   var gap = len < offset ? new Array(offset - len).join('\x00') : '';
   var rest = origin.substr(offset + replacer.length);
   var result = origin.substr(0, offset).concat(gap, replacer, rest);
-  this.__keys[key].store= result;
+  this.__store.string.set(key, result);
   return result.length;
 }
-
 
 R.append = function(key, str) {
   this.__check(arguments).whether(
@@ -193,7 +170,6 @@ R.append = function(key, str) {
   return this.get(key);
 }
 
-
 function normalizeOffset(offset, length) {
   // -7 -6 -5 -4 -3 -2 -1
   // 0  1  2  3  4  5  6
@@ -203,7 +179,6 @@ function normalizeOffset(offset, length) {
   }
   return offset;
 }
-
 
 R.setbit =
 R.getbit =

@@ -2,157 +2,137 @@
 var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
-R.hexists = function(hash, field) {
+R.hexists = function(hkey, field) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_hash' 
   );
-  if (!this.exists(hash)) return 0;
-  if (!this.__keys[hash].store === undefined) return 0;
-  return {}.hasOwnProperty.call(
-    this.__keys[hash].store, field
-  ) ? 1 : 0;
+  if (this.__store.hash.exists(hkey, field)) return 1;
+  return 0;
 }
 
-
-R.hset = function(hash, field, value) {
+R.hset = function(hkey, field, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_hash'
   );
-  var retval = 0;
-  this.__timers.del(hash);
-  if (!this.hexists(hash, field)) {
-    this.__keys[hash] = {
-      type: 'hash',
-      store: Object.create(null)
-    }
-    retval = 1;
-  } 
-  this.__keys[hash].store[field] = value;
+  var retval = this.hexists(hkey, field) ? 0 : 1;
+  this.__timers.del(hkey);
+  this.__keys.set(hkey, 'hash');
+  this.__store.hash.set(hkey, field, val);
   return retval;
 }
-
 
 R.hsetnx = function(hash, field, value) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_hash'
   ); 
-  if (!hexists(hash, field)) {
+  if (!this.hexists(hash, field)) {
     return this.hset(hash, field, value);
   }
   return 0;
 }
 
-
-R.hget = function(hash, field) {
+R.hget = function(hkey, field) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_hash'
   );
-  if (!this.hexists(hash, field)) {
+  if (!this.hexists(hkey, field)) {
     return null;
   }
-  return this.__keys[hash].store[field];
+  return this.__store.hash.get(hkey, field);
 }
 
-
-R.hdel = function(hash/*, field1, field2... */) {
+R.hdel = function(hkey/*, field1, field2... */) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_hash'
   ); 
   var count = 0;
   [].slice.call(arguments, 1).forEach((function(field) {
-    if (this.hexists(hash, field)) {
-      delete this.__keys[hash].field; 
+    if (this.hexists(hkey, field)) {
+      this.__store.hash.del(hkey, field);
       count += 1;
     }
   }).bind(this));
   return count;
 }
 
+R.hkeys = function(hkey) {
+  this.__check(arguments).whether(
+    'missing_1st', 'key_type_not_hash'
+  ); 
+  return this.exists(hkey) 
+    ? this.__store.hash.fields(hkey)
+    : [];
+}
 
-R.hgetall = function(hash) {
+R.hvals = function(hkey) {
+  this.__check(arguments).whether(
+    'missing_1st', 'key_type_not_hash'
+  ); 
+  return this.exists(hkey) 
+    ? this.hkeys(hkey).map((function(field) {
+        return this.hget(hkey, field);
+      }).bind(this))
+    : [];
+}
+R.hgetall = function(hkey) {
   this.__check(arguments).whether(
     'missing_1st', 'key_type_not_hash'
   );
-  var ret = [];
-  if (this.exists(hash)) {
-    for (var field in this.__keys[hash].store) {
-      ret.push(field, this.__keys[hash].store[field]);
-    }
+  var retarr = [];
+  if (this.exists(hkey)) {
+    this.hkeys(hkey).forEach((function(field) {
+      retarr.push(field, this.hget(hkey, field));
+    }).bind(this));
   }
-  return ret;
+  return retarr;
 }
 
-
-R.hkeys = function(hash) {
+R.hlen = function(hkey) {
   this.__check(arguments).whether(
     'missing_1st', 'key_type_not_hash'
   ); 
-  return this.exists(hash) 
-    ? Object.keys(this.__keys[hash].store)
-    : [];
+  return this.hkeys(hkey).length;
 }
 
-
-R.hvals = function(hash) {
-  this.__check(arguments).whether(
-    'missing_1st', 'key_type_not_hash'
-  ); 
-  return this.exists(hash) 
-    ? Object.keys(this.__keys[hash]).map(function(field) {
-        return this.__keys[hash].store[field];
-      }) 
-    : [];
-}
-
-
-R.hlen = function(hash) {
-  this.__check(arguments).whether(
-    'missing_1st', 'key_type_not_hash'
-  ); 
-  return this.hkeys(hash).length;
-}
-
-
-R.hmset = function(hash, field, value/*, field2, value2...*/) {
+R.hmset = function(hkey, field, val/*, field2, val2...*/) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'even_args'
   );
   for (var i = 1; i < arguments.length; i += 2) {
-    this.hset(hash, arguments[i] = arguments[i + 1]);
+    this.hset(hkey, arguments[i], arguments[i + 1]);
   }
 }
 
-
-R.hmget = function(hash /*, field, field2,... */) {
+R.hmget = function(hkey /*, field, field2,... */) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
   ); 
-  [].slice.call(arguments, 1).map((function(field) {
-    return this.hget(hash, field);    
+  return [].slice.call(arguments, 1).map((function(field) {
+    return this.hget(hkey, field);    
   }).bind(this));
 }
 
-
-R.hincryby = function(hash, field, amount) {
+R.hincrby = function(hkey, field, amount) {
   this.__check(arguments).whether(
-    'missing_1st_to_3rd', 'key_type_not_hash', '3rd_not_integer'
+    'missing_1st_to_3rd', 'key_type_not_hash',
+    'field_val_not_integer', '3rd_not_integer'
   ); 
-  if (!this.hexists(hash, field)) {
-    this.hset(hash, field, 0);
+  if (!this.hexists(hkey, field)) {
+    this.hset(hkey, field, 0);
   }
-  this.hset(hash, field, parseInt(this.hget(hash, field), 10) + amount);
-  return this.hget(key, field);
+  this.hset(hkey, field, parseInt(this.hget(hkey, field), 10) + amount);
+  return this.hget(hkey, field);
 }
 
-
-R.hincrybyfloat = function(hash, field, val) {
+R.hincrbyfloat = function(hkey, field, amount) {
   this.__check(arguments).whether(
-    'missing_1st_to_3rd', 'key_type_not_hash', '3rd_not_number'
+    'missing_1st_to_3rd', 'key_type_not_hash', 
+    'field_val_not_number', '3rd_not_number'
   ); 
-  if (!this.hexists(hash, field)) {
-    this.hset(hash, field, 0);
+  if (!this.hexists(hkey, field)) {
+    this.hset(hkey, field, 0);
   }
-  this.hset(hash, field, (+this.hget(hash, field) + (+amount)));
-  return this.hget(key, field);      
+  this.hset(hkey, field, (+this.hget(hkey, field) + (+amount)));
+  return this.hget(hkey, field);      
 }
  
