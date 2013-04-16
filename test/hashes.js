@@ -13,7 +13,7 @@ describe('hashes.js', function() {
   });
 
   describe('#hexists()', function() {
-    it('should expose error to the key of other than type hash', function() {
+    it('should exposes error to the key of other than type hash', function() {
       var flag = false;
       R.set('key', 'hello');
       try {
@@ -23,62 +23,62 @@ describe('hashes.js', function() {
       }
       assert.ok(flag);
     }); 
-    it('should return 1 to an existing field in the key', function() {
+    it('should returns 1 to an existing field in the key', function() {
       assert.equal(1, R.hexists('mykey', 'name'));
     });
-    it('should return 0 to an none-existing field in the key', function() {
+    it('should returns 0 to an none-existing field in the key', function() {
       assert.equal(0, R.hexists('mykey', 'empty'));
     }); 
   });
 
   describe('#hset()', function() {
-    it('should set a field', function() {
+    it('should sets a field', function() {
       assert.equal('Chuan', R.hget('mykey', 'name'));
       R.hset('mykey', 'name', 'new Chuan');
       assert.equal('new Chuan', R.hget('mykey', 'name'));
     });
-    it('should return 1 when the field is new', function() {
+    it('should returns 1 when the field is new', function() {
       assert.equal(1, R.hset('mykey', 'newname', 'Chuan')); 
     }); 
-    it('should return 0 when the field is exisiting', function() {
+    it('should returns 0 when the field is exisiting', function() {
       assert.equal(0, R.hset('mykey', 'name', 'new Chuan')); 
     }); 
   });
 
   describe('#hsetnx()', function() {
-    it('should return 0 if the key is existing and failed to set', function() {
+    it('should returns 0 if the key is existing and failed to set', function() {
       assert.equal(0, R.hsetnx('mykey', 'name', 'new Chuan'));
       assert.equal('Chuan', R.hget('mykey', 'name'));
     }) 
   });
 
   describe('#hget()', function() {
-    it('should return the value of the field in the key', function() {
+    it('should returns the value of the field in the key', function() {
       assert.equal('Chuan', R.hget('mykey', 'name'));
     });
-    it('should return null to a non-existing field or key', function() {
+    it('should returns null to a non-existing field or key', function() {
       assert.equal(null, R.hget('empty', 'empty'));
       assert.equal(null, R.hget('mykey', 'empty'));
     });
   });
 
   describe('#hdel()', function() {
-    it('should delete a field in a key', function() {
+    it('should deletes a field in a key', function() {
       R.hdel('mykey', 'name');
       assert.equal(0, R.hexists('mykey', 'name'));
     });
-    it('should return 2 if deleting 2 filed in the key successfully', function() {
+    it('should returns 2 if deleting 2 filed in the key successfully', function() {
       R.hset('mykey', 'a', 'aa');
       R.hset('mykey', 'b', 'bb');
       assert.equal(2, R.hdel('mykey', 'a', 'b'));
     });
-    it('should return 0 if no field in the key is deleted', function() {
+    it('should returns 0 if no field in the key is deleted', function() {
       assert.equal(0, R.hdel('mykey', 'x', 'y', 'z'));  
     });
   });
 
   describe('#hkeys()', function() {
-    it('should return all the fields in the key', function() {
+    it('should returns all the fields in the key', function() {
       R.hmset('newkey', 'a', 'aa', 'b', 'bb', 'c', 'cc');  
       assert.equal(
         JSON.stringify(['a', 'b', 'c']),
@@ -88,7 +88,7 @@ describe('hashes.js', function() {
   });
 
   describe('#hvals()', function() {
-    it('should return all the value of fields in the key', function() {
+    it('should returns all the value of fields in the key', function() {
       R.hmset('newkey', 'a', 'aa', 'b', 'bb', 'c', 'cc');  
       assert.equal(
         JSON.stringify(['aa', 'bb', 'cc']),
@@ -98,7 +98,7 @@ describe('hashes.js', function() {
   });
             
   describe('#hgetall()', function() {
-    it('should return all the fields and values in the key', function() {
+    it('should returns all the fields and values in the key', function() {
       R.hmset('newkey', 'a', 'aa', 'b', 'bb', 'c', 'cc');  
       assert.equal(
         JSON.stringify(['a', 'aa', 'b', 'bb', 'c', 'cc']),

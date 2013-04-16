@@ -15,7 +15,7 @@ describe('strings.js', function() {
   });
 
   describe('#set()', function() {
-    it('should expose when missing arguments', function() {
+    it('should exposes when missing arguments', function() {
       var flag = false;
       try {
         R.set();
@@ -24,28 +24,28 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-    it('should set a plain string', function() {
+    it('should sets a plain string', function() {
       R.set('key-a', 'aaa');
       assert.equal('aaa', R.get('key-a'));
     }); 
-    it('should parse an array to json string', function() {
+    it('should parses an array to json string', function() {
       R.set('key-a', [1,2,3]);
       assert.equal(R.get('key-a'), '[1,2,3]');
     });
   });
 
   describe('#setnx()', function() {
-    it('should return 0 when the key exists', function() {
+    it('should returns 0 when the key exists', function() {
       assert.equal(0, R.setnx('key-a', 'b'));
     });
-    it('should return 1 when the key has been set', function() {
+    it('should returns 1 when the key has been set', function() {
       assert.equal(1, R.setnx('key-empty', 'b'));
       assert.equal('b', R.get('key-empty'));
     }); 
   });
 
   describe('#setex()', function() {
-    it('should set a key and expire a key with second', function(done) {
+    it('should sets a key and expire a key with second', function(done) {
       R.setex('key-mykey', 1, 'ab');
       assert.equal('ab', R.get('key-mykey'));
       setTimeout(function() {
@@ -56,7 +56,7 @@ describe('strings.js', function() {
   }); 
 
   describe('#psetnx()', function() {
-    it('should set a key and expire a key with millisecond', function(done) {
+    it('should sets a key and expire a key with millisecond', function(done) {
       R.psetex('key-a', 200, 'ab');
       assert.equal('ab', R.get('key-a'));
       setTimeout(function() {
@@ -67,7 +67,7 @@ describe('strings.js', function() {
   }); 
 
   describe('#get()', function() {
-   it('should expose error when the key with type other than string', function() {
+   it('should exposes error when the key with type other than string', function() {
       var flag = false;
       R.__keys.set('key-a', 'list');
       try {
@@ -77,28 +77,28 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-    it('should return the value of a specified key', function() {
+    it('should returns the value of a specified key', function() {
       assert.equal('a', R.get('key-a'));
     });
-    it('should return null of a non-existing key', function() {
+    it('should returns null of a non-existing key', function() {
       assert.strictEqual(null, R.get('key-empty'));
     });
   });
 
   describe('#getset()', function() {
-    it('should return old value of the key', function() {
+    it('should returns old value of the key', function() {
       R.set('key-a', 'oldval');
       var oldval = R.getset('key-a', 'newval');
       assert.equal('oldval', oldval);
     });
-    it('should return new value of the key', function() {
+    it('should returns new value of the key', function() {
       R.getset('key-b', 'newval');
       assert.equal('newval', R.get('key-b'));
     });  
   });
 
   describe('#mget()', function() {
-    it('should return multiple value as an array', function() {
+    it('should returns multiple value as an array', function() {
       assert.equal(
         JSON.stringify(R.mget('key-a', 'key-b', 'key-c')),
         JSON.stringify(['a','b','c'])
@@ -111,7 +111,7 @@ describe('strings.js', function() {
   });
 
   describe('#mset', function() {
-    it('should handle odd number of arguments', function() {
+    it('should handles odd number of arguments', function() {
       var flag = false;
       try {
         R.mset('key-a', 'key-a', 'key-b');
@@ -120,7 +120,7 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-    it('should set multiple key at once', function() {
+    it('should sets multiple key at once', function() {
       R.mset('key-a', 'aa', 'key-b', 'bb');
       assert.equal('aa', R.get('key-a'));
       assert.equal('bb', R.get('key-b'));
@@ -128,34 +128,34 @@ describe('strings.js', function() {
   });
 
   describe('#msetnx', function() {
-    it('should return 0 on setting value to an existing key', function() {
+    it('should returns 0 on setting value to an existing key', function() {
       assert.equal(0, R.msetnx('key-a', 'a', 'key-empty', 'empty'));
     });
   });
 
   describe('#strlen()', function() {
-    it('should return the string length of of an existing key`s value', function() {
+    it('should returns the string length of of an existing key`s value', function() {
       R.set('key-a', 'hello');
       assert.equal(5, R.strlen('key-a'));  
     });
-    it('should return 0 of non-existing key', function() {
+    it('should returns 0 of non-existing key', function() {
       assert.equal(0, R.strlen('nonexisting'))
     });
   });
 
   describe('#incrby()', function() {
-    it('should return 4', function() {
+    it('should returns 4', function() {
       R.set('key-a', '1');
       assert.equal(4, R.incrby('key-a', 3));
     });
-    it('should return -2', function() {
+    it('should returns -2', function() {
       R.set('key-a', '1');
       assert.equal(-2, R.incrby('key-a', -3));
     }); 
-    it('should return the amount to an non-existing key', function() {
+    it('should returns the amount to an non-existing key', function() {
       assert.equal(2, R.incrby('key-empty', 2));  
     });
-    it('should expose error with bad arguments', function() {
+    it('should exposes error with bad arguments', function() {
       var flag = false
       try {
         R.incryby();
@@ -164,7 +164,7 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-    it('should expose error the type of key value not integer', function() {
+    it('should exposes error the type of key value not integer', function() {
       var flag = false
       try {
         R.set('key-a', 'hello');
@@ -174,7 +174,7 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });  
-    it('should expose error the amount value not integer', function() {
+    it('should exposes error the amount value not integer', function() {
       var flag = false
       try {
         R.set('key-a', 1);
@@ -185,7 +185,7 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });  
-    it('should expose error when the type of key not string', function() {
+    it('should exposes error when the type of key not string', function() {
       var flag = false
       try {
         R.set('key-a', 1);
@@ -199,17 +199,17 @@ describe('strings.js', function() {
   });
 
   describe('#incr', function() {
-    it('should return 1 to an non-existing key', function() {
+    it('should returns 1 to an non-existing key', function() {
       assert.equal(1, R.incr('key-empty'));  
     });
-    it('should return 2', function() {
+    it('should returns 2', function() {
       R.set('key-b', 1);
       assert.equal(2, R.incr('key-b'));  
     }); 
   });
 
   describe('#decrby', function() {
-    it('should return 2', function() {
+    it('should returns 2', function() {
       R.set('key-a', 4);
       assert.equal(2, R.decrby('key-a', 2));
     });
@@ -220,21 +220,21 @@ describe('strings.js', function() {
   });
 
   describe('#decr', function() {
-    it('should return -1 to an non-existing key', function() {
+    it('should returns -1 to an non-existing key', function() {
       assert.equal(-1, R.decr('key-empty'));  
     });
-    it('should return 1', function() {
+    it('should returns 1', function() {
       R.set('key-b', 2);
       assert.equal(1, R.decr('key-b'));  
     }); 
   });
  
   describe('#incrbyfloat', function() {
-    it('should return 4', function() {
+    it('should returns 4', function() {
       R.set('key-a', 2);
       assert.equal(4, R.incrbyfloat('key-a', 2)); 
     });
-    it('should return 4.2', function() {
+    it('should returns 4.2', function() {
       R.set('key-a', 2);
       assert.equal(4.2, R.incrbyfloat('key-a', 2.2)); 
     }); 
@@ -249,7 +249,7 @@ describe('strings.js', function() {
   });
 
   describe('#getrange()', function() {
-    it('should return specified range of string', function() {
+    it('should returns specified range of string', function() {
       R.set('key-a', 'abcdefg');
       assert.equal('abc', R.getrange('key-a', 0, 2));
       assert.equal('abc', R.getrange('key-a', -7, -5));
@@ -263,7 +263,7 @@ describe('strings.js', function() {
   });
 
   describe('#setrange()', function() {
-    it('should expose error with negative offset', function() {
+    it('should exposes error with negative offset', function() {
       var flag = false;
       try {
         R.setrange('key-a', -2, 'substring');
@@ -272,7 +272,7 @@ describe('strings.js', function() {
       }
       assert.ok(flag);
     });
-    it('should set range properly', function() {
+    it('should sets range properly', function() {
       R.set('key-a', 'abcdefg');
       R.setrange('key-a', 2, 'xyz')
       assert.equal('abxyzfg', R.get('key-a'));
@@ -299,10 +299,10 @@ describe('strings.js', function() {
   });
 
   describe('#append()', function() {
-    it('should handle non-existing key', function() {
+    it('should handles non-existing key', function() {
       assert.equal('abc', R.append('key-empty', 'abc'));  
     });
-    it('should append new string to a key', function() {
+    it('should appends new string to a key', function() {
       R.set('key-a', 'abc');
       assert.equal('abcdef', R.append('key-a', 'def'));  
     }); 
