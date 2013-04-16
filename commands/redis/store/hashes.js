@@ -27,6 +27,9 @@ hashes.prototype.get = function(hkey, field) {
 }
 
 hashes.prototype.del = function(hkey, field) {
+  if (field === undefined) {
+    delete this.memo[hkey];
+  }
   if (this.memo[hkey] !== undefined) {
     delete this.memo[hkey][field];
   }
