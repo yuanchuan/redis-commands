@@ -11,7 +11,6 @@ R.set = function(key, val) {
   this.__timers.del(key);
 }
 
-
 R.setnx = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
@@ -23,7 +22,6 @@ R.setnx = function(key, val) {
   return 1;
 }
 
-
 R.setex = function(key, sec, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd'
@@ -32,7 +30,6 @@ R.setex = function(key, sec, val) {
   this.expire(key, sec);
 }
 
-
 R.psetex = function(key, msec, val) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd'
@@ -40,7 +37,6 @@ R.psetex = function(key, msec, val) {
   this.set(key, val);
   this.pexpire(key, msec);
 }
-
  
 R.get = function(key) {
   this.__check(arguments).whether(
@@ -52,7 +48,6 @@ R.get = function(key) {
   return this.__store.string.get(key);
 }
 
-
 R.getset = function(key, val) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_string'
@@ -61,7 +56,6 @@ R.getset = function(key, val) {
   this.set(key, val);
   return old;
 }
-
 
 R.mget = function(/* key1, key2... */) {
   this.__check(arguments).whether(
@@ -72,7 +66,6 @@ R.mget = function(/* key1, key2... */) {
   }).bind(this));
 }
 
-
 R.mset = function(key, val/* , key, val... */) {
   this.__check(arguments).whether(
     'odd_args'
@@ -81,7 +74,6 @@ R.mset = function(key, val/* , key, val... */) {
     this.set(arguments[i], arguments[i + 1]);
   }
 }
-
 
 R.msetnx = function(key, val/* , key, val... */) {
   this.__check(arguments).whether(
@@ -94,7 +86,6 @@ R.msetnx = function(key, val/* , key, val... */) {
   return 1;
 }
 
-
 R.strlen = function(key) {
   this.__check(arguments).whether(
     'key_type_not_string'
@@ -105,7 +96,6 @@ R.strlen = function(key) {
     return 0;
   }
 }
-
 
 R.incrby = function(key, amount) {
   this.__check(arguments).whether(
@@ -118,22 +108,18 @@ R.incrby = function(key, amount) {
   this.set(key, parseInt(this.get(key), 10) + amount);
   return this.get(key); 
 }
-
  
 R.incr = function(key) {
   return this.incrby(key, 1);
 }
 
-
 R.decrby = function(key, amount) {
   return this.incrby(key, -1 * amount);
 }
-
  
 R.decr = function(key) {
   return this.incrby(key, -1);
 }
-
  
 R.incrbyfloat = function(key, amount) {
   this.__check(arguments).whether(
@@ -147,7 +133,6 @@ R.incrbyfloat = function(key, amount) {
   return this.get(key);
 }
 
-
 R.getrange = function(key, from, to) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_string'
@@ -159,7 +144,6 @@ R.getrange = function(key, from, to) {
     normalizeOffset(to, len) + 1
   );
 }
-
 
 R.setrange = function(key, offset, replacer) {
   this.__check(arguments).whether(
@@ -175,7 +159,6 @@ R.setrange = function(key, offset, replacer) {
   return result.length;
 }
 
-
 R.append = function(key, str) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_string'
@@ -187,7 +170,6 @@ R.append = function(key, str) {
   return this.get(key);
 }
 
-
 function normalizeOffset(offset, length) {
   // -7 -6 -5 -4 -3 -2 -1
   // 0  1  2  3  4  5  6
@@ -197,7 +179,6 @@ function normalizeOffset(offset, length) {
   }
   return offset;
 }
-
 
 R.setbit =
 R.getbit =

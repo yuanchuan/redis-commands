@@ -2,7 +2,6 @@
 var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
-
 R.hexists = function(hkey, field) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_hash' 
@@ -10,7 +9,6 @@ R.hexists = function(hkey, field) {
   if (this.__store.hash.exists(hkey, field)) return 1;
   return 0;
 }
-
 
 R.hset = function(hkey, field, val) {
   this.__check(arguments).whether(
@@ -23,7 +21,6 @@ R.hset = function(hkey, field, val) {
   return retval;
 }
 
-
 R.hsetnx = function(hash, field, value) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_hash'
@@ -34,7 +31,6 @@ R.hsetnx = function(hash, field, value) {
   return 0;
 }
 
-
 R.hget = function(hkey, field) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_hash'
@@ -44,7 +40,6 @@ R.hget = function(hkey, field) {
   }
   return this.__store.hash.get(hkey, field);
 }
-
 
 R.hdel = function(hkey/*, field1, field2... */) {
   this.__check(arguments).whether(
@@ -60,7 +55,6 @@ R.hdel = function(hkey/*, field1, field2... */) {
   return count;
 }
 
-
 R.hkeys = function(hkey) {
   this.__check(arguments).whether(
     'missing_1st', 'key_type_not_hash'
@@ -69,7 +63,6 @@ R.hkeys = function(hkey) {
     ? this.__store.hash.fields(hkey)
     : [];
 }
-
 
 R.hvals = function(hkey) {
   this.__check(arguments).whether(
@@ -81,7 +74,6 @@ R.hvals = function(hkey) {
       }).bind(this))
     : [];
 }
-
 R.hgetall = function(hkey) {
   this.__check(arguments).whether(
     'missing_1st', 'key_type_not_hash'
@@ -95,14 +87,12 @@ R.hgetall = function(hkey) {
   return retarr;
 }
 
-
 R.hlen = function(hkey) {
   this.__check(arguments).whether(
     'missing_1st', 'key_type_not_hash'
   ); 
   return this.hkeys(hkey).length;
 }
-
 
 R.hmset = function(hkey, field, val/*, field2, val2...*/) {
   this.__check(arguments).whether(
@@ -113,7 +103,6 @@ R.hmset = function(hkey, field, val/*, field2, val2...*/) {
   }
 }
 
-
 R.hmget = function(hkey /*, field, field2,... */) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd'
@@ -122,7 +111,6 @@ R.hmget = function(hkey /*, field, field2,... */) {
     return this.hget(hkey, field);    
   }).bind(this));
 }
-
 
 R.hincrby = function(hkey, field, amount) {
   this.__check(arguments).whether(
@@ -135,7 +123,6 @@ R.hincrby = function(hkey, field, amount) {
   this.hset(hkey, field, parseInt(this.hget(hkey, field), 10) + amount);
   return this.hget(hkey, field);
 }
-
 
 R.hincrbyfloat = function(hkey, field, amount) {
   this.__check(arguments).whether(
