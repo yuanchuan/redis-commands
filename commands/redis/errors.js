@@ -126,7 +126,7 @@ module.exports = {
     if (this.hexists(hkey, field)) {
       var val = this.hget(hkey, field);
       if (isNaN(+val)) {
-        throw Error('Value is not an integer or out of range');
+        throw Error('Value is not a valid float');
       }
     }
   }
