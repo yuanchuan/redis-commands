@@ -17,7 +17,7 @@ module.exports = function () {
   this.__timers = new timers();
   this.__store = {
     'string':      new strings(),
-    'hash':       new hashes(),
+    'hash':        new hashes(),
     'list':        new lists(),
     'set':         new sets(),
     'sorted-set':  new sortedsets()

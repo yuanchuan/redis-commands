@@ -59,6 +59,13 @@ module.exports = {
     } 
   }, 
 
+  'key_type_not_list': function() {
+    var key = arguments[0];
+    if (this.exists(key) && this.type(key) !== 'list') {
+      throw Error('Operation against a key holding the wrong kind of value');  
+    } 
+  },  
+
   'key_val_not_integer': function() {
     var key = arguments[0];
     if (this.exists(key)) {
