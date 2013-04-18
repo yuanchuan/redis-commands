@@ -56,4 +56,53 @@ describe('lists.js', function() {
     });
   });
 
+  describe('#range()', function() {
+    it('should return first 4 items', function() {
+      R.lpush('key', 'c', 'b', 'a');
+      R.rpush('key', 'd', 'e', 'f');
+      assert.equal(
+        JSON.stringify(['a', 'b', 'c', 'd']),
+        JSON.stringify(R.lrange('key', 0, 3))
+      );
+    });
+
+    it('should return last 4 items', function() {
+      R.lpush('key', 'c', 'b', 'a');
+      R.rpush('key', 'd', 'e', 'f');
+      assert.equal(
+        JSON.stringify(['c', 'd', 'e', 'f']),
+        JSON.stringify(R.lrange('key', -4, -1))
+      );
+    });
+
+    it('should return one item if the start and end are the same', function() {
+      R.lpush('key', 'c', 'b', 'a');
+      assert.equal(
+        JSON.stringify(['a']),
+        JSON.stringify(R.lrange('key', 0, 0))
+      ); 
+      assert.equal(
+        JSON.stringify(['b']),
+        JSON.stringify(R.lrange('key', 1, 1))
+      );
+      assert.equal(
+        JSON.stringify(['c']),
+        JSON.stringify(R.lrange('key', 2, 2))
+      );      
+    });
+
+    it('should handles invalid indexes', function() {
+      R.lpush('key', 'c', 'b', 'a');
+      assert.equal(
+        JSON.stringify(['b', 'c']),
+        JSON.stringify(R.lrange('key', 1, 100))
+      );
+      assert.equal(
+        JSON.stringify(['a', 'b', 'c']),
+        JSON.stringify(R.lrange('key', -100, 100))
+      );
+    });
+
+  });
+
 });
