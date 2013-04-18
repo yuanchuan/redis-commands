@@ -90,7 +90,9 @@ R.lindex = function(key, index) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_list'
   );
-  index = normalizeOffset(index, this.llen(key)); 
+  if (index < 0) {
+    index += this.llen(key);
+  }
   return this.__store.list.get(key, index); 
 }
 

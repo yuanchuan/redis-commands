@@ -11,9 +11,8 @@ describe('lists.js', function() {
     R.flushdb();
   });
 
-  describe('#lpush(), #rpush(), #lindex', function() {
+  describe('#lpush(), #rpush()', function() {
     it('could store values to the key from both side', function() {
-
       assert.equal(6, R.lpush('mykey', 'a','b','c','d','e','f'));
       assert.equal('f', R.lindex('mykey', 0));        
       assert.equal('a', R.lindex('mykey', 5));        
@@ -65,7 +64,6 @@ describe('lists.js', function() {
         JSON.stringify(R.lrange('key', 0, 3))
       );
     });
-
     it('should return last 4 items', function() {
       R.lpush('key', 'c', 'b', 'a');
       R.rpush('key', 'd', 'e', 'f');
@@ -74,7 +72,6 @@ describe('lists.js', function() {
         JSON.stringify(R.lrange('key', -4, -1))
       );
     });
-
     it('should return one item if the start and end are the same', function() {
       R.lpush('key', 'c', 'b', 'a');
       assert.equal(
@@ -90,7 +87,6 @@ describe('lists.js', function() {
         JSON.stringify(R.lrange('key', 2, 2))
       );      
     });
-
     it('should handles invalid indexes', function() {
       R.lpush('key', 'c', 'b', 'a');
       assert.equal(
@@ -102,7 +98,23 @@ describe('lists.js', function() {
         JSON.stringify(R.lrange('key', -100, 100))
       );
     });
+  });
 
+  describe('#lindex()', function() {
+    it('should return first item', function() {
+      R.lpush('key', 'a');
+      assert.equal('a', R.lindex('key', 0));
+    });
+    it('should return last item', function() {
+      R.lpush('key', 'b', 'a');
+      assert.equal('b', R.lindex('key', 1));
+      assert.equal('b', R.lindex('key', -1));
+    }); 
+    it('should return null if index is out of range', function() {
+      R.rpush('key', 'a', 'b');
+      assert.equal(undefined, R.lindex('key', -100));
+      assert.equal(undefined, R.lindex('key', 100));
+    });
   });
 
 });
