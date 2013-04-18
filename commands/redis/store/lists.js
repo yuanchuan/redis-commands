@@ -12,6 +12,7 @@ lists.prototype.lpush = function(key, val) {
     // should be replaced with a more proper data structure like `dequeue`.
     this.memo[key] = [];
   }
+  // The unshift will become quite inefficent as the array getting bigger.
   this.memo[key].unshift(val);
 }
 
@@ -43,6 +44,16 @@ lists.prototype.get = function(key, index) {
   if (this.exists(key)) {
     return this.memo[key][index];
   } 
+}
+
+lists.prototype.range = function(key, start, end) {
+  if (this.exists(key)) {
+    return this.memo[key].slice(start, end + 1 );  
+  }
+}
+
+lists.prototype.set = function(key, index, val) {
+
 }
 
 lists.prototype.del = function(key) {
