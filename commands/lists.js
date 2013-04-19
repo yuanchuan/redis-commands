@@ -115,8 +115,19 @@ R.lset = function(key, index, val) {
   this.__store.list.set(key, index, val);    
 }
 
-R.lrem = function() {
-
+R.lrem = function(key, count, item) {
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd', 
+    'key_type_not_list',
+    '2nd_not_integer'
+  );
+  if (count == 0) {
+    return this.__store.list.removeAll(key, item);
+  } else if (count < 0) {
+    return this.__store.list.removeLast(key, -count, item);
+  } else {
+    return this.__store.list.removeFirst(key, count, item);
+  }
 }
 
 function normalizeOffset(offset, length) {

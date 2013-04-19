@@ -145,4 +145,33 @@ describe('lists.js', function() {
     });     
   });
 
+  describe('#lrem()', function() {
+    it('should delete first 2 a`s', function() {
+      R.rpush('key', 'a', 'b', 'c', 'a', 'a');
+      assert.equal(2, R.lrem('key', 2, 'a'));
+      assert.equal(
+        JSON.stringify(['b', 'c', 'a']),
+        JSON.stringify(R.lrange('key', 0, 3))
+      );
+    });
+
+    it('should delete last 2 a`s', function() {
+      R.rpush('key', 'a', 'b', 'c', 'a', 'a');
+      assert.equal(2, R.lrem('key', -2, 'a'));
+      assert.equal(
+        JSON.stringify(['a', 'b', 'c']),
+        JSON.stringify(R.lrange('key', 0, 3))
+      );
+    }); 
+    it('should delete all a`s', function() {
+      R.rpush('key', 'a', 'b', 'c', 'a', 'a');
+      assert.equal(3, R.lrem('key', 0, 'a'));
+      assert.equal(
+        JSON.stringify(['b', 'c']),
+        JSON.stringify(R.lrange('key', 0, 3))
+      );
+    }); 
+
+  });
+
 });
