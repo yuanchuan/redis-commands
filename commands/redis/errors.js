@@ -136,6 +136,14 @@ module.exports = {
         throw Error('Value is not a valid float');
       }
     }
+  },
+
+  '2nd_out_of_list_range': function() {
+    var index = arguments[1];
+    var length = this.llen(arguments[0]);
+    if (index > length || index < -length) {
+      throw Error('Index out of range');
+    }
   }
 
 }

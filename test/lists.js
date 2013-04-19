@@ -117,4 +117,32 @@ describe('lists.js', function() {
     });
   });
 
+  describe('#set()', function() {
+    it('should set the second item`s value', function() {
+      R.rpush('key', 'a', 'b', 'c');
+      R.lset('key', 1, 'x');
+      assert.equal('x', R.lindex('key', 1));
+    });
+    it('should expose error when the index is out of range', function() {
+      var flag = false;
+      R.rpush('key', 'a', 'b', 'c');
+      try {
+        R.lset('key', 100, 'x');
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });
+    it('should expose error when the index is not integer', function() {
+      var flag = false;
+      R.rpush('key', 'a', 'b', 'c');
+      try {
+        R.lset('key', 1.3, 'x');
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });     
+  });
+
 });

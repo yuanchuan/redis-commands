@@ -76,7 +76,8 @@ R.llen = function(key) {
 
 R.lrange = function(key, start, end) {
   this.__check(arguments).whether(
-    'missing_1st_to_3rd', 'key_type_not_list'
+    'missing_1st_to_3rd', 'key_type_not_list',
+    '2nd_not_integer', '3rd_not_integer'
   );
   if (!this.exists(key)) return [];
   var len = this.llen(key);
@@ -88,7 +89,9 @@ R.lrange = function(key, start, end) {
 
 R.lindex = function(key, index) {
   this.__check(arguments).whether(
-    'missing_1st_or_2nd', 'key_type_not_list'
+    'missing_1st_or_2nd', 
+    'key_type_not_list',
+    '2nd_not_integer'
   );
   if (index < 0) {
     index += this.llen(key);
@@ -105,7 +108,11 @@ R.ltrim = function(key, start, end) {
 }
 
 R.lset = function(key, index, val) {
-      
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd', 'key_type_not_list',
+    '2nd_not_integer', '2nd_out_of_list_range'
+  ); 
+  this.__store.list.set(key, index, val);    
 }
 
 R.lrem = function() {

@@ -48,12 +48,14 @@ lists.prototype.get = function(key, index) {
 
 lists.prototype.range = function(key, start, end) {
   if (this.exists(key)) {
-    return this.memo[key].slice(start, end + 1 );  
+    return this.memo[key].slice(start, end + 1);  
   }
 }
 
 lists.prototype.set = function(key, index, val) {
-
+  if (this.exists(key)) {
+    this.memo[key][index] = val;
+  }
 }
 
 lists.prototype.del = function(key) {
