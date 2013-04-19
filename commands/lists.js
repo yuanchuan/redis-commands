@@ -121,6 +121,9 @@ R.lset = function(key, index, val) {
     'missing_1st_to_3rd', 'key_type_not_list',
     '2nd_not_integer', '2nd_out_of_list_range'
   ); 
+  if (index < 0) {
+    index += this.llen(key);
+  }
   this.__store.list.set(key, index, val);    
 }
 
