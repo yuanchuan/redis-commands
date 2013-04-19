@@ -52,6 +52,10 @@ lists.prototype.range = function(key, start, end) {
   }
 }
 
+lists.prototype.trim = function(key, start, end) {
+  this.memo[key] = this.range(key, start, end);
+}
+
 lists.prototype.removeFirst = function(key, num, item) {
   var count = 0;
   if (this.exists(key)) {

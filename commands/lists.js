@@ -104,7 +104,16 @@ R.linsert = function(key, side, pivot, val) {
 }
 
 R.ltrim = function(key, start, end) {
-  
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd', 'key_type_not_list',
+    '2nd_not_integer', '3rd_not_integer'
+  );
+  if (!this.exists(key)) return [];
+  var len = this.llen(key);
+  return this.__store.list.trim(key, 
+    normalizeOffset(start, len),
+    normalizeOffset(end, len)
+  ); 
 }
 
 R.lset = function(key, index, val) {

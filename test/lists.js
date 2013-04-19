@@ -171,7 +171,25 @@ describe('lists.js', function() {
         JSON.stringify(R.lrange('key', 0, 3))
       );
     }); 
+  });
 
+  describe('#ltrim', function() {
+    it('should slice the list into first three items', function() {
+      R.rpush('key', 'a', 'b', 'c', 'd', 'e', 'f', 'g');
+      R.ltrim('key', 0, 2);
+      assert.equal(
+        JSON.stringify(['a', 'b', 'c']),
+        JSON.stringify(R.lrange('key', 0, 2))
+      );
+    });
+    it('should slice the list into last three items', function() {
+      R.rpush('key', 'a', 'b', 'c', 'd', 'e', 'f', 'g');
+      R.ltrim('key', -3, -1);
+      assert.equal(
+        JSON.stringify(['e', 'f', 'g']),
+        JSON.stringify(R.lrange('key', 0, 2))
+      );
+    });   
   });
 
 });
