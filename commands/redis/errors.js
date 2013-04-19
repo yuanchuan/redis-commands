@@ -19,6 +19,12 @@ module.exports = {
     }
   },
 
+  'missing_1st_to_4th': function() {
+    if (arguments.length < 4) {
+      throw Error("Wrong number of arguments");
+    }
+  }, 
+
   '1st_not_exist': function() {
     if (!this.exists(arguments[0])) {
       throw Error('No such key');
@@ -37,6 +43,13 @@ module.exports = {
       throw Error('Value is not an integer or out of range');
     }
   },
+
+  '2nd_not_before_or_after': function() {
+    var arg = String.prototype.toLowerCase.call(arguments[1]).trim();
+    if (arg !== 'before' && arg !== 'after') {
+      throw Error('syntax error');
+    }
+  },  
 
   '3rd_not_integer': function() {
     var arg = arguments[2];

@@ -100,7 +100,13 @@ R.lindex = function(key, index) {
 }
 
 R.linsert = function(key, side, pivot, val) {
-
+  this.__check(arguments).whether(
+    'missing_1st_to_4th', 
+    'key_type_not_list',
+    '2nd_not_before_or_after'
+  );   
+  side = (side.toLowerCase().trim() === 'before') ? 'Before': 'After';
+  return this.__store.list['insert' + side](key, pivot, val);
 }
 
 R.ltrim = function(key, start, end) {

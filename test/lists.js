@@ -117,7 +117,34 @@ describe('lists.js', function() {
     });
   });
 
-  describe('#set()', function() {
+  describe('#linsert()', function() {
+    it('should insert after pivot b', function() {
+      R.rpush('key', 'a', 'b', 'c');
+      R.linsert('key', 'after', 'b', 'x')
+      assert.equal(
+        JSON.stringify(['a', 'b', 'x', 'c']),
+        JSON.stringify(R.lrange('key', 0, 5))
+      );
+      assert.equal(4, R.llen('key'));
+    });
+    it('should insert before pivot b', function() {
+      R.rpush('key', 'a', 'b', 'c');
+      R.linsert('key', 'before', 'b', 'x')
+      assert.equal(
+        JSON.stringify(['a', 'x', 'b', 'c']),
+        JSON.stringify(R.lrange('key', 0, 5))
+      );
+    }); 
+    it('should return 0 to an non-existing key', function() {
+      assert.equal(0, R.linsert('empty', 'before', 'hello', 'x'));
+    });
+    it('should return -1 to an non-existing pivot', function() {
+      R.rpush('key', 'a','b');
+      assert.equal(-1, R.linsert('key', 'before', 'hello', 'x'));
+    }); 
+  });
+
+  describe('#lset()', function() {
     it('should set the second item`s value', function() {
       R.rpush('key', 'a', 'b', 'c');
       R.lset('key', 1, 'x');

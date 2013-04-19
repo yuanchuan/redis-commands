@@ -105,6 +105,24 @@ lists.prototype.set = function(key, index, val) {
   }
 }
 
+lists.prototype.insertBefore = function(key, pivot, val) {
+  if (this.exists(key)) {
+    var idx = this.memo[key].indexOf(pivot);  
+    if (idx < 0) return idx;
+    this.memo[key].splice(idx, 1, val, pivot);
+  }
+  return this.len(key);
+}
+
+lists.prototype.insertAfter = function(key, pivot, val) {
+  if (this.exists(key)) {
+    var idx = this.memo[key].indexOf(pivot);  
+    if (idx < 0) return idx;
+    this.memo[key].splice(idx, 1, pivot, val);
+  }
+  return this.len(key);
+}
+
 lists.prototype.del = function(key) {
   delete this.memo[key];
 }
@@ -112,3 +130,4 @@ lists.prototype.del = function(key) {
 lists.prototype.delAll = function(key) {
   this.memo = Object.create(null);
 }
+
