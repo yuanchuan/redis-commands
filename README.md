@@ -1,5 +1,7 @@
 Redis commands implemented in JavaScript.
 
+** NOTICE ** This is just an experimental project for fun and learning. I don't expect it to be useful anyway.
+
 
 ## Example
 
@@ -13,11 +15,11 @@ R.get('mykey');
 
 ##TODO
 
-* Implement sets
-* Implement sorted-sets
-* More test
+* Sets
+* Sorted-sets
+* More tests
 * Optimize 
-* Migrate into browser
+* Migrate to browser
 
 
 ## License
