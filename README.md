@@ -1,9 +1,24 @@
-# redis-commands
-
 Redis commands implemented in JavaScript.
 
-Still have a lot to go.
+
+## Example
+
+```js
+
+var R = new Redis();
+
+R.set('mykey', 'hello');
+R.get('mykey');
+```
+
+##TODO
+
+* Implement sets
+* Implement sorted-sets
+* More test
+* Optimize 
+* Migrate into browser
 
 
-### License
+## License
 MIT
