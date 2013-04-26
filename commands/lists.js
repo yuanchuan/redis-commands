@@ -2,20 +2,14 @@
 var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
-R.lpush = function(key, val/*, val1, val2... */) {
+R.lpush = function(key/*, val1, val2... */) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_list'
   );
   this.__keys.set(key, 'list');
-
-  //A little optimize.
-  if (arguments.length < 3) {
+  [].slice.call(arguments, 1).forEach((function(val) {
     this.__store.list.lpush(key, val);
-  } else {
-    [].slice.call(arguments, 1).forEach((function(val) {
-      this.__store.list.lpush(key, val);
-    }).bind(this)); 
-  }
+  }).bind(this)); 
   return this.__store.list.len(key);
 }
 
@@ -28,18 +22,14 @@ R.lpushx = function(key, val) {
   return this.__store.list.len(key);
 }
 
-R.rpush = function(key, val/*, val1, val2... */) {
+R.rpush = function(key/*, val1, val2... */) {
   this.__check(arguments).whether(
     'missing_1st_or_2nd', 'key_type_not_list'
   );
   this.__keys.set(key, 'list');
-  if (arguments.length < 3) {
+  [].slice.call(arguments, 1).forEach((function(val) {
     this.__store.list.rpush(key, val);
-  } else {
-    [].slice.call(arguments, 1).forEach((function(val) {
-      this.__store.list.rpush(key, val);
-    }).bind(this));
-  }
+  }).bind(this));
   return this.__store.list.len(key); 
 }
 
