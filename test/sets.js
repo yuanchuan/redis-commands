@@ -31,6 +31,10 @@ describe('sets.js', function() {
       assert.equal(1, R.sismember('myset', 'a-member'));
       assert.equal(1, R.sismember('myset', 'b-member'));
     });
+    it('should return type set', function() {
+      assert.equal(1, R.sadd('myset', 'a-member'));
+      assert.equal('set', R.type('myset'));
+    });
   });
 
 });
