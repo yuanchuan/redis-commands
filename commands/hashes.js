@@ -21,12 +21,12 @@ R.hset = function(hkey, field, val) {
   return retval;
 }
 
-R.hsetnx = function(hash, field, value) {
+R.hsetnx = function(hkey, field, value) {
   this.__check(arguments).whether(
     'missing_1st_to_3rd', 'key_type_not_hash'
   ); 
-  if (!this.hexists(hash, field)) {
-    return this.hset(hash, field, value);
+  if (!this.hexists(hkey, field)) {
+    return this.hset(hkey, field, value);
   }
   return 0;
 }
