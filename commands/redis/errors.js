@@ -79,6 +79,13 @@ module.exports = {
     } 
   },  
 
+  'key_type_not_set': function() {
+    var key = arguments[0];
+    if (this.exists(key) && this.type(key) !== 'set') {
+      throw Error('Operation against a key holding the wrong kind of value');  
+    } 
+  }, 
+
   'key_val_not_integer': function() {
     var key = arguments[0];
     if (this.exists(key)) {
