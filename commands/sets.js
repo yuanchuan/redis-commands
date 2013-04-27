@@ -37,8 +37,11 @@ R.srem = function(skey/*, member1, member2...*/) {
   return count;
 }
 
-R.smembers = function() {
-
+R.smembers = function(skey) {
+  this.__check(arguments).whether(
+    'missing_1st', 'key_type_not_set'
+  ); 
+  return this.__store.set.members(skey);
 }
  
 R.spop = function() {

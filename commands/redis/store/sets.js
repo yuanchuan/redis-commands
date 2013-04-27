@@ -31,8 +31,8 @@ sets.prototype.delAll = function() {
 }
 
 sets.prototype.members = function(skey) {
-  if (this.memo[skey] !== undefined) {
-    return Object.keys(this.memo[skey]);
-  }
+  return (this.memo[skey] !== undefined) 
+    ?  Object.keys(this.memo[skey])
+    :  [];
 }
 

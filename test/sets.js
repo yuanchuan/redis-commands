@@ -51,4 +51,30 @@ describe('sets.js', function() {
     });      
   });
 
+  describe('#smembers()', function() {
+    it('should return all members in a given set as an array', function() {
+      R.sadd('myset', 'a', 'b', 'c');
+      assert.equal(
+        JSON.stringify(['a', 'b', 'c']),
+        JSON.stringify(R.smembers('myset'))
+      )
+    });
+    it('should return an empty array if the set does not exist', function() {
+      assert.equal(
+        JSON.stringify([]),
+        JSON.stringify(R.smembers('myset')) 
+      )
+    });
+    it('should expose error if the set is not of type set', function() {
+      var flag = false;
+      try {
+        R.set('myset', 'hello');
+        R.smembers('myset');
+      } catch(e) {
+        assert.ok(flag = true);
+      }
+      assert.ok(flag);
+    });
+  });
+
 });
