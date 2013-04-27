@@ -37,4 +37,18 @@ describe('sets.js', function() {
     });
   });
 
+  describe('#srem()', function() {
+    it('should be able to delete a member in a given set', function() {
+      R.sadd('myset', 'a', 'b', 'c');
+      assert.equal(1, R.srem('myset', 'a'));
+      assert.equal(0, R.sismember('myset', 'a'));
+    });
+    it('should be able to delete multiple member in a given set', function() {
+      R.sadd('myset', 'a', 'b', 'c');
+      assert.equal(2, R.srem('myset', 'a', 'b'));
+      assert.equal(0, R.sismember('myset', 'a'));
+      assert.equal(0, R.sismember('myset', 'b'));
+    });      
+  });
+
 });

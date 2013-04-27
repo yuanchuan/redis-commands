@@ -1,3 +1,4 @@
+
 var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
@@ -22,8 +23,18 @@ R.sadd = function(skey/*member1, member2...*/) {
   return count;
 }
 
-R.srem = function() {
-
+R.srem = function(skey/*, member1, member2...*/) {
+  this.__check(arguments).whether(
+    'missing_1st_or_2nd', 'key_type_not_set'
+  ); 
+  var count = 0;
+  [].slice.call(arguments, 1).forEach((function(member) {
+    if (this.sismember(skey, member)) {
+      this.__store.set.del(skey, member);
+      count += 1;
+    }
+  }).bind(this));     
+  return count;
 }
 
 R.smembers = function() {
@@ -69,3 +80,4 @@ R.sunion = function() {
 R.sunionstore = function() {
 
 }
+
