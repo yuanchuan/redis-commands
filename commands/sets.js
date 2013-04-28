@@ -43,6 +43,13 @@ R.smembers = function(skey) {
   ); 
   return this.__store.set.members(skey);
 }
+
+R.scard = function(skey) {
+  this.__check(arguments).whether(
+    'missing_1st', 'key_type_not_set'
+  ); 
+  return this.__store.set.card(skey);
+}
  
 R.spop = function() {
 
@@ -51,11 +58,7 @@ R.spop = function() {
 R.srandmember = function() {
 
 }
- 
-R.scard = function() {
 
-}
- 
 R.smove = function(){
 
 }

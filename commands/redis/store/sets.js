@@ -36,3 +36,6 @@ sets.prototype.members = function(skey) {
     :  [];
 }
 
+sets.prototype.card = function(skey) {
+  return this.members(skey).length;
+}

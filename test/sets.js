@@ -77,4 +77,14 @@ describe('sets.js', function() {
     });
   });
 
+  describe('#scard()', function() {
+    it('should return the length of the members in a given set', function() {
+      R.sadd('myset', 'a', 'b', 'c');
+      assert.equal(3, R.scard('myset'));
+    });
+    it('should return 0 to a non-existed key', function() {
+      assert.equal(0, R.scard('notkey'));
+    });
+  });
+
 });
