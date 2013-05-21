@@ -40,7 +40,7 @@ R.psetex = function(key, msec, val) {
  
 R.get = function(key) {
   this.__check(arguments).whether(
-    'key_type_not_string'
+    'missing_1st', 'key_type_not_string'
   );
   if (!this.exists(key)) {
     return null;
