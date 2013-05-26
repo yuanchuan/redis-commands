@@ -4,16 +4,26 @@ var Redis = module.exports = require('./redis');
 var R = Redis.prototype;
 
 R.exists = function(key) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  ); 
   return this.__keys.exists(key) ? 1 : 0;
 }                
 
 R.type = function(key) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  ); 
   if (this.exists(key)) {
     return this.__keys.get(key);
   }
+  return "none";
 }
  
 R.del = function(/* key1, key2... */) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  ); 
   var count = 0;
   [].forEach.call(arguments, (function(key) {
     if (this.exists(key)) {
@@ -27,6 +37,9 @@ R.del = function(/* key1, key2... */) {
 }                
 
 R.keys = function(pattern) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  ); 
   return this.__keys.all().filter(function(key) {
     return minimatch(key, pattern || '');
   });
@@ -74,18 +87,27 @@ R.expireat = function(key, usec) {
 }
 
 R.pttl = function(key) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  ); 
   if (!this.exists(key)) return -2;
   if (!this.__timers.exists(key)) return -1;
   return this.__timers.get(key);     
 }
 
 R.ttl = function(key) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  );  
   var msec = this.pttl(key);  
   var method = msec > 1000 ? 'floor' : 'ceil';
   return msec > 0 ? Math[method](msec / 1e3) : msec; 
 }
 
 R.persist = function(key) {
+  this.__check(arguments).whether(
+    'missing_1st'
+  ); 
   if (!this.exists(key) || !this.__timers.exists(key)) return 0;              
   this.__timers.del(key);
   return 1;
