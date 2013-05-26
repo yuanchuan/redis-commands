@@ -87,4 +87,37 @@ describe('sets.js', function() {
     });
   });
 
+  describe('#srandmember()', function() {
+    it('return number of the `count` of elements according to its sign', function() {
+      R.sadd('mykey', 'a', 'b', 'c', 'd', 'e', 'f', 'a', 'b', 'x', 'y', 'z', 'w', 'o', 'p','q');
+      assert.equal(5, R.srandmember('mykey', 5).length);
+      assert.equal(R.scard('mykey'), R.srandmember('mykey', 100).length);
+      assert.equal(5, R.srandmember('mykey', -5).length);
+      assert.equal(100, R.srandmember('mykey', -100).length);
+    }); 
+    it('return distinct elements if the count is positive', function() {
+      R.sadd('mykey', 'a', 'b', 'c', 'd', 'e', 'f', 'a', 'b', 'x', 'y', 'z', 'w', 'o', 'p','q');
+      for (var i = 0; i < 100; ++i) {
+        var s = R.srandmember('mykey', 5)
+        var tmp = {};
+        s.forEach(function(n) { tmp[n] = 1; });
+        assert.equal(5, Object.keys(tmp).length)
+      }
+    });
+    it('should return 1 random elements if the count is not given', function() {
+      R.sadd('mykey', 'a', 'b', 'c');  
+      var el = R.srandmember('mykey');
+      assert.ok(R.sismember('mykey', el));
+    });
+  });
+
+  describe('#spop()', function() {
+    it('should return and remove a random element', function() {
+      R.sadd('mykey', 'a', 'b', 'c', 'd', 'e');
+      var el = R.spop('mykey');
+      assert.ok(!R.sismember('mykey', el));
+      assert.equal(4, R.scard('mykey'));
+    });
+  });
+
 });

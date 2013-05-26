@@ -50,15 +50,34 @@ R.scard = function(skey) {
   ); 
   return this.__store.set.card(skey);
 }
+
+R.srandmember = function(skey, count) {
+  this.__check(arguments).whether(
+    'missing_1st', 'key_type_not_set'
+  ); 
+  if (undefined === count) count = 1; 
+  else this.__check(arguments).whether('2nd_not_integer'); 
+  var members = this.smembers(skey);
+  if (!members.length) return null;
+  if (count >= 0) {
+    if (count >= members.length) {
+      return sample_shuffle(members);
+    }
+    return sample_floyd(count, members);
+  } else {
+    return sample_normal(Math.abs(count), members);
+  }
+}
+
+R.spop = function(skey) {
+  this.__check(arguments).whether(
+    'missing_1st', 'key_type_not_set'
+  );  
+  var member = this.srandmember(skey, 1);
+  this.srem(skey, member);
+  return member;
+}
  
-R.spop = function() {
-
-}
-
-R.srandmember = function() {
-
-}
-
 R.smove = function(){
 
 }
@@ -85,5 +104,36 @@ R.sunion = function() {
 
 R.sunionstore = function() {
 
+}
+
+
+// normal random list
+function sample_normal(m, list) {
+  var s = [];
+  var n = list.length;
+  while (s.length < m) {
+    s.push(list[Math.floor(Math.random() * n)]);
+  }
+  return s;
+}
+
+// The Microsoft shuffle
+// http://www.robweir.com/blog/2010/02/microsoft-random-browser-ballot.html
+function sample_shuffle(list) {
+  return list.sort(function() {
+    return 0.5 * Math.random();
+  });
+}
+
+// Floyd algorithm
+// From the book "More Programming Pearls"
+function sample_floyd(m, list) {
+  var s = []; 
+  var n = list.length - 1;
+  for (var idx = n - m + 1; idx <= n; ++idx) {
+    var candi = list[Math.floor(Math.random() * idx)];
+    s.push(!~s.indexOf(candi) ? candi : list[idx]);
+  }
+  return s;
 }
 
