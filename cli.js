@@ -1,44 +1,86 @@
 #!/usr/bin/env node
 
-var Redis = require('./');
-var R = new Redis();
 var repl = require('repl');
+var Redis = new (require('./'))();
 
-var server = repl.start({
-  'prompt': 'redis-commands> ',
-  eval: function(cmd, context, filename, callback) {
-    var input = cmd
-      .replace(/^\(|\)$|\n/g, '')
-      .split(/\s+/)
-      .filter(function(n) { return n.length })
-
-    var command = input[0];
-
-    if (command && command.length) {
-      if (R[command]) {
-        try {  
-          result = R[command].apply(R, input.slice(1))
-          callback(result === undefined ? grey('OK'): result);
-        } catch (e) {
-          callback(red('Error: ' + e.message));
-        }
-      } else {
-        callback(red('Error: ' + 'unknown command ' + command));
-      }
-    } else {
-      callback();
-    }
+var wrap = {
+  string: function (string) {
+    return '"' + string + '"'; 
+  },
+  integer: function(integer) {
+    return '(integer) ' + integer; 
+  },
+  array: function(array) {
+    return array.map(function(item, i) {
+      return (i + 1) + ') ' + wrap.string(item);
+    }).join('\n'); 
+  },
+  nil: function(nil) {
+    return '(nil)';
+  },
+  error: function(error) {
+    return '(error) ' + error;
   }
-});
+};
 
-for (var command in R) {
-  server.context[command] = R[command];
+var format = function(output) {
+  var ret = '';
+  if ( Array.isArray(output)) {
+    ret = wrap.array(output);
+  } else if (Object.prototype.toString.call(output) === '[object String]') {
+    ret = wrap.string(output);
+  } else if (Object.prototype.toString.call(output) === '[object Number]') {
+    ret = wrap.integer(output);
+  } else if (null === output) {
+    ret = wrap.nil(output);
+  } else if (undefined === output) {
+    ret = 'OK';  
+  }
+  return ret;
 }
  
-function grey(str) {
-  return '\033[90m' + str + '\033[39m';
-}
+var options = {};
+options.prompt = 'redis-commands> ';
+options.ignoreUndefined = true;
 
-function red(str) {
-  return '\033[31m' + str + '\033[39m';
+options.eval = function(input, context, filename, callback) {
+  var command = input
+    .replace(/^\(|\)$|\n/g, '')
+    .trim()
+    .split(/\s+/)
+    .map(function(n) { 
+      return isNaN(+n) ? n : +n;
+    });
+  var head = command[0];
+  if (head && command.length) {
+    if (Redis[head]) {
+      try {  
+        callback(format(
+          Redis[head].apply(Redis, command.slice(1))
+        ));
+      } catch (e) {
+        callback(
+          wrap.error(e.message)
+        );
+      }
+    } else {
+      callback(
+        wrap.error('unknown command ') + 
+        wrap.string(head)
+      );
+    }
+  } else {
+    callback();
+  }
+};  
+
+
+var server = repl.start(options);
+for (var s in server.context) {
+  delete server.context[s];
 }
+// vm.createContext(Redis) is not enough, so..
+for (var command in Redis) {
+  server.context[command] = Redis[command];
+}  
+
