@@ -85,3 +85,9 @@ for (var command in Redis) {
   server.context[command] = Redis[command];
 }  
 
+process.stdin.on('keypress', function(s, key) {
+  if (key && key.ctrl && key.name == 'l') {
+    process.stdout.write('\u001B[2J\u001B[0;0f'+server.prompt);
+  }
+});
+
