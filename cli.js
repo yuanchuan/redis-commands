@@ -11,6 +11,7 @@ var wrap = {
     return '(integer) ' + integer; 
   },
   array: function(array) {
+    if (!array.length) return '(empty list or set)'; 
     return array.map(function(item, i) {
       return (i + 1) + ') ' + wrap.string(item);
     }).join('\n'); 
