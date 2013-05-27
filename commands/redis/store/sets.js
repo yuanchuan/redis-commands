@@ -42,26 +42,29 @@ sets.prototype.card = function(skey) {
 
 sets.prototype.union = function() {
   var temp = {};
-  [].forEach.call(arguments, (function(skey) {
+  var length = arguments.length;
+  for (var i = 0; i < length; ++i) {
+    var skey = arguments[i];
     if (this.memo[skey]) {
       Object.keys(this.memo[skey]).forEach(function(key) {
         temp[key] = 1;    
       });
     }
-  }).bind(this));
+  }
   return Object.keys(temp);
 }
 
 sets.prototype.inter = function() {
   var temp = {};
-  [].forEach.call(arguments, (function(skey) {
-    if (this.memo[skey]) {
-      Object.keys(this.memo[skey]).forEach(function(key) {
-        if (!temp[key]) temp[key] = 1; 
-        else temp[key] += 1;
-      });
-    }
-  }).bind(this));
+  var length = arguments.length;
+  for (var i = 0; i < length; ++i ) {
+    var skey = arguments[i];
+    if (!this.memo[skey]) return []
+    Object.keys(this.memo[skey]).forEach(function(key) {
+      if (!temp[key]) temp[key] = 1; 
+      else temp[key] += 1;
+    });
+  }
   return Object.keys(temp).filter(function(key) {
     return temp[key] > 1;
   });
@@ -69,17 +72,19 @@ sets.prototype.inter = function() {
 
 sets.prototype.diff = function() {
   var temp = {};
+  var length = arguments.length;
   var first = this.memo[arguments[0]];
   if (!first) return [];
   else first = Object.keys(first);
-  [].forEach.call(arguments, (function(skey) {
+  for (var i = 0; i < length; ++i ) {
+    var skey = arguments[i];
     if (this.memo[skey]) {
       Object.keys(this.memo[skey]).forEach(function(key) {
         if (!temp[key]) temp[key] = 1; 
         else temp[key] += 1;
       });
     }
-  }).bind(this));
+  }
   return Object.keys(temp).filter(function(key) {
     return temp[key] < 2 && !!~first.indexOf(key);  
   });
