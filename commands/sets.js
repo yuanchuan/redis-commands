@@ -110,12 +110,25 @@ R.sinterstore = function() {
 
 }
 
-R.sunion = function() {
-
+R.sunion = function(/* key1, key2... */) {
+  this.__check(arguments).whether(
+    'missing_1st', 'any_key_type_not_set'
+  );  
+  return this.__store.set.union.apply(
+    this.__store.set, arguments
+  );
 }
 
-R.sunionstore = function() {
-
+R.sunionstore = function(skey/*, key1, key2..*/) {
+  this.__check(arguments).whether(
+    'missing_1st_or_2nd', 'any_key_type_not_set'
+  );
+  var union = this.sunion.apply(this, 
+    [].slice.call(arguments, 1)
+  );             
+  return union.length
+    ? this.sadd.apply(this, [skey].concat(union)) 
+    : 0;
 }
 
 

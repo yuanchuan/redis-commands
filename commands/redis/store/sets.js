@@ -40,3 +40,15 @@ sets.prototype.card = function(skey) {
   return this.members(skey).length;
 }
 
+sets.prototype.union = function() {
+  var temp = {};
+  [].forEach.call(arguments, (function(skey) {
+    if (this.memo[skey]) {
+      Object.keys(this.memo[skey]).forEach(function(key) {
+        temp[key] = 1;    
+      });
+    }
+  }).bind(this));
+  return Object.keys(temp);
+}
+

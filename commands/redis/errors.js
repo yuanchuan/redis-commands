@@ -86,14 +86,18 @@ module.exports = {
     } 
   }, 
   '1st_or_2nd_key_type_not_set': function() {
-    var key1 = arguments[0];
-    var key2 = arguments[1];
-    if (
-      (this.exists(key1) && this.type(key1) !== 'set') ||
-      (this.exists(key2) && this.type(key2) !== 'set')
-    ) {
-      throw Error('Operation against a key holding the wrong kind of value');  
-    } 
+    [arguments[0], arguments[1]].forEach(function(key) {
+      if (this.exists(key) && this.type(key) !== 'set') {
+        throw Error('Operation against a key holding the wrong kind of value');  
+      } 
+    });
+  }, 
+  'any_key_type_not_set': function() {
+    [].forEach.call(arguments, (function(key) {
+      if (this.exists(key) && this.type(key) !== 'set') {
+        throw Error('Operation against a key holding the wrong kind of value');  
+      } 
+    }).bind(this));
   }, 
 
   'key_val_not_integer': function() {
