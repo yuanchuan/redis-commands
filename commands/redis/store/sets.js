@@ -66,7 +66,7 @@ sets.prototype.inter = function() {
     });
   }
   return Object.keys(temp).filter(function(key) {
-    return temp[key] > 1;
+    return temp[key] > length - 1;
   });
 }
 

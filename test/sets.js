@@ -236,6 +236,12 @@ describe('sets.js', function() {
         JSON.stringify(R.sinter('keya', 'keyb'))
       ); 
     });
+    it('should be able to handle multiple sets', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd'); 
+      R.sadd('keyc', 'c', 'd', 'e'); 
+      assert.equal('c', R.sinter('keya', 'keyb', 'keyc').join(''));
+    });
   });
 
   describe('#sinterstore()', function() {
