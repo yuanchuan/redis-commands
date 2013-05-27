@@ -85,6 +85,16 @@ module.exports = {
       throw Error('Operation against a key holding the wrong kind of value');  
     } 
   }, 
+  '1st_or_2nd_key_type_not_set': function() {
+    var key1 = arguments[0];
+    var key2 = arguments[1];
+    if (
+      (this.exists(key1) && this.type(key1) !== 'set') ||
+      (this.exists(key2) && this.type(key2) !== 'set')
+    ) {
+      throw Error('Operation against a key holding the wrong kind of value');  
+    } 
+  }, 
 
   'key_val_not_integer': function() {
     var key = arguments[0];

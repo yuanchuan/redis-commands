@@ -78,8 +78,20 @@ R.spop = function(skey) {
   return member;
 }
  
-R.smove = function(){
-
+R.smove = function(skey1, skey2, member){
+  this.__check(arguments).whether(
+    'missing_1st_to_3rd', '1st_or_2nd_key_type_not_set'
+  );
+  if (!this.sismember(skey1, member)) return 0;
+  if (!this.sismember(skey2, member)) {
+    this.sadd(skey2, member);  
+    // srem after sadd
+    this.srem(skey1, member);
+    return 1;
+  } else {
+    this.srem(skey1, member);
+    return 0;
+  }
 }
 
 R.sdiff = function() {

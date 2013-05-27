@@ -120,4 +120,32 @@ describe('sets.js', function() {
     });
   });
 
+  describe('#smove()', function() {
+    it('return 0 if the key does not exist in the first set', function() {
+      R.sadd('keya', 'a', 'b', 'c');  
+      R.sadd('keyb', 'x', 'y', 'z');
+      assert.equal(0, R.smove('keya', 'keyb', 'm'))
+    });
+    it('return 0 if the key DOES exist in the second set and remove from first set', function() {
+      R.sadd('keya', 'a', 'b', 'c', 'x');  
+      R.sadd('keyb', 'x', 'y', 'z');
+      assert.equal(0, R.smove('keya', 'keyb', 'x'))
+      assert.ok(!R.sismember('keya', 'x'))
+    });
+    it('return 1 if the operation being done successfully', function() {
+      R.sadd('keya', 'a', 'b', 'c');  
+      R.sadd('keyb', 'x', 'y', 'z');
+      assert.equal(1, R.smove('keya', 'keyb', 'a'))
+      assert.equal(
+        JSON.stringify(['b','c']),
+        JSON.stringify(R.smembers('keya'))
+      )
+      assert.equal(
+        JSON.stringify(['x','y', 'z', 'a']),
+        JSON.stringify(R.smembers('keyb'))
+      )
+    }); 
+
+  });
+
 });
