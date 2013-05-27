@@ -183,4 +183,73 @@ describe('sets.js', function() {
     });
   });
 
+  describe('#sdiff()', function() {
+    it('should ignore invalid sets', function() {
+      R.sadd('keya', 'a', 'b');
+      assert.equal('ab', R.sdiff('keya', 'x', 'y').join(""))
+    });
+    it('should return the whole two list if they are distinct', function() {
+      R.sadd('keya', 'a', 'b');
+      R.sadd('keyb', 'x', 'y');
+      assert.equal(
+        JSON.stringify(['a', 'b', 'x', 'y']),
+        JSON.stringify(R.sdiff('keya', 'keyb'))
+      );
+    });
+    it('should return {a, d}', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd');
+      assert.equal(
+        JSON.stringify(['a', 'd']),
+        JSON.stringify(R.sdiff('keya', 'keyb'))
+      ); 
+    });
+  });
+
+  describe('#sdiffstore()', function() {
+    it('should compose new set and return number of members in the new set', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd'); 
+      var count = R.sdiffstore('keyc', 'keya', 'keyb');
+      assert.equal(2, R.scard('keyc'));
+      assert.equal(
+        JSON.stringify(['a', 'd']),
+        JSON.stringify(R.smembers('keyc'))
+      )
+    });
+  }); 
+
+  describe('#sinter()', function() {
+    it('should return empty to invalid sets', function() {
+      R.sadd('keya', 'a', 'b');
+      assert.equal(0, R.sinter('keya', 'x', 'y').length)
+    });
+    it('should return empty to two distinct sets', function() {
+      R.sadd('keya', 'a', 'b');
+      R.sadd('keyb', 'x', 'y');
+      assert.equal(0, R.sinter('keya', 'keyb').length);
+    });
+    it('should return members both sets contains', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd');
+      assert.equal(
+        JSON.stringify(['b', 'c']),
+        JSON.stringify(R.sinter('keya', 'keyb'))
+      ); 
+    });
+  });
+
+  describe('#sinterstore()', function() {
+    it('should compose new set and return number of members in the new set', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd'); 
+      var count = R.sinterstore('keyc', 'keya', 'keyb');
+      assert.equal(2, R.scard('keyc'));
+      assert.equal(
+        JSON.stringify(['b', 'c']),
+        JSON.stringify(R.smembers('keyc'))
+      )
+    });
+  }); 
+
 });

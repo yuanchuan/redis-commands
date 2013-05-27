@@ -94,26 +94,61 @@ R.smove = function(skey1, skey2, member){
   }
 }
 
-R.sdiff = function() {
-
+R.sdiff = function(/* key1, key2... */) {
+  this.__check(arguments).whether(
+    'missing_1st', 'any_key_type_not_set'
+  );
+  if (arguments.length == 1) { 
+    return this.smembers(arguments[0]);
+  }
+  return this.__store.set.diff.apply(
+    this.__store.set, arguments
+  );
 }
 
-R.sdiffstore = function() {
-
+R.sdiffstore = function(skey/* key1, key2... */) {
+  this.__check(arguments).whether(
+    'missing_1st_or_2nd', 'any_key_type_not_set'
+  );
+  var diff = this.sdiff.apply(this, 
+    [].slice.call(arguments, 1)
+  );             
+  return diff.length
+    ? this.sadd.apply(this, [skey].concat(diff)) 
+    : 0;   
 }
 
-R.sinter = function() {
-
+R.sinter = function(/* key1, key2... */) {
+  this.__check(arguments).whether(
+    'missing_1st', 'any_key_type_not_set'
+  );
+  if (arguments.length == 1) { 
+    return this.smembers(arguments[0]);
+  } 
+  return this.__store.set.inter.apply(
+    this.__store.set, arguments
+  ); 
 }
 
-R.sinterstore = function() {
-
+R.sinterstore = function(skey/* key1, key2... */) {
+  this.__check(arguments).whether(
+    'missing_1st_or_2nd', 'any_key_type_not_set'
+  );
+  var inter = this.sinter.apply(this, 
+    [].slice.call(arguments, 1)
+  );             
+  return inter.length
+    ? this.sadd.apply(this, [skey].concat(inter)) 
+    : 0;    
 }
 
 R.sunion = function(/* key1, key2... */) {
   this.__check(arguments).whether(
     'missing_1st', 'any_key_type_not_set'
   );  
+  if (arguments.length == 1) { 
+    return this.smembers(arguments[0]);
+  } 
   return this.__store.set.union.apply(
     this.__store.set, arguments
   );
