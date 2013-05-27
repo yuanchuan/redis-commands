@@ -1,6 +1,6 @@
 {
   "name": "redis-commands",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Redis commands implemented in javascript (learning purpose only)",
   "main": "index.js",
   "dependencies": {

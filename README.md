@@ -23,7 +23,6 @@ R.get('mykey');
 
 ##TODO
 
-* Sets
 * Sorted-sets
 * More tests
 * Optimize 
