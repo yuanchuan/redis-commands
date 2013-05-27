@@ -69,6 +69,9 @@ sets.prototype.inter = function() {
 
 sets.prototype.diff = function() {
   var temp = {};
+  var first = this.memo[arguments[0]];
+  if (!first) return [];
+  else first = Object.keys(first);
   [].forEach.call(arguments, (function(skey) {
     if (this.memo[skey]) {
       Object.keys(this.memo[skey]).forEach(function(key) {
@@ -78,7 +81,7 @@ sets.prototype.diff = function() {
     }
   }).bind(this));
   return Object.keys(temp).filter(function(key) {
-    return temp[key] < 2;
+    return temp[key] < 2 && !!~first.indexOf(key);  
   });
 }
 

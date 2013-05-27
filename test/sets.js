@@ -188,22 +188,24 @@ describe('sets.js', function() {
       R.sadd('keya', 'a', 'b');
       assert.equal('ab', R.sdiff('keya', 'x', 'y').join(""))
     });
-    it('should return the whole two list if they are distinct', function() {
+    it('should return the first list if the two sets are distinct', function() {
       R.sadd('keya', 'a', 'b');
       R.sadd('keyb', 'x', 'y');
       assert.equal(
-        JSON.stringify(['a', 'b', 'x', 'y']),
+        JSON.stringify(['a', 'b']),
         JSON.stringify(R.sdiff('keya', 'keyb'))
       );
     });
-    it('should return {a, d}', function() {
+    it('should return {a} to keya', function() {
       R.sadd('keya', 'a', 'b', 'c');
       R.sadd('keyb', 'b', 'c', 'd');
-      assert.equal(
-        JSON.stringify(['a', 'd']),
-        JSON.stringify(R.sdiff('keya', 'keyb'))
-      ); 
+      assert.equal('a', R.sdiff('keya', 'keyb').join(''))
     });
+    it('should return {d} to keyb', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd');
+      assert.equal('d', R.sdiff('keyb', 'keya').join(''))
+    });        
   });
 
   describe('#sdiffstore()', function() {
@@ -211,11 +213,8 @@ describe('sets.js', function() {
       R.sadd('keya', 'a', 'b', 'c');
       R.sadd('keyb', 'b', 'c', 'd'); 
       var count = R.sdiffstore('keyc', 'keya', 'keyb');
-      assert.equal(2, R.scard('keyc'));
-      assert.equal(
-        JSON.stringify(['a', 'd']),
-        JSON.stringify(R.smembers('keyc'))
-      )
+      assert.equal(1, R.scard('keyc'));
+      assert.equal('a', R.smembers('keyc').join(''));
     });
   }); 
 
