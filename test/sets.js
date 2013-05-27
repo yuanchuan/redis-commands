@@ -145,7 +145,42 @@ describe('sets.js', function() {
         JSON.stringify(R.smembers('keyb'))
       )
     }); 
+  });
 
+  describe('#sunion()', function() {
+    it('should ignore invalid sets', function() {
+      R.sadd('keya', 'a', 'b');
+      assert.equal('ab', R.sunion('keya', 'x', 'y').join(""))
+    });
+    it('join two distinct sets', function() {
+      R.sadd('keya', 'a', 'b');
+      R.sadd('keyb', 'x', 'y');
+      assert.equal(
+        JSON.stringify(['a', 'b', 'x', 'y']),
+        JSON.stringify(R.sunion('keya', 'keyb'))
+      );
+    });
+    it('join two sets and drop duplicate members', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd');
+      assert.equal(
+        JSON.stringify(['a', 'b', 'c', 'd']),
+        JSON.stringify(R.sunion('keya', 'keyb'))
+      ); 
+    });
+  });
+
+  describe('#sunionstore()', function() {
+    it('should compose new set and return number of members in the new set', function() {
+      R.sadd('keya', 'a', 'b', 'c');
+      R.sadd('keyb', 'b', 'c', 'd'); 
+      var count = R.sunionstore('keyc', 'keya', 'keyb');
+      assert.equal(4, R.scard('keyc'));
+      assert.equal(
+        JSON.stringify(['a', 'b', 'c', 'd']),
+        JSON.stringify(R.smembers('keyc'))
+      )
+    });
   });
 
 });

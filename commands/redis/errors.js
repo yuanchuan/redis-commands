@@ -86,11 +86,11 @@ module.exports = {
     } 
   }, 
   '1st_or_2nd_key_type_not_set': function() {
-    [arguments[0], arguments[1]].forEach(function(key) {
+    [arguments[0], arguments[1]].forEach((function(key) {
       if (this.exists(key) && this.type(key) !== 'set') {
         throw Error('Operation against a key holding the wrong kind of value');  
       } 
-    });
+    }).bind(this));
   }, 
   'any_key_type_not_set': function() {
     [].forEach.call(arguments, (function(key) {
