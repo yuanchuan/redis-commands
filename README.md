@@ -7,14 +7,14 @@ Redis commands implemented in JavaScript.
 ## Installation
 
 ```bash
-$ npm install redis-commands
+$ npm install @yuanchuan/redis-commands
 ```
 
 ## Example
 
 ```js
 
-var Redis = require('redis-commands');
+var Redis = require('@yuanchuan/redis-commands');
 var R = new Redis();
 
 R.set('mykey', 'hello');
